@@ -1,0 +1,12 @@
+runtime: python27
+api_version: 1
+threadsafe: distributed
+handlers:
+- url: /.*
+  script: connect.app
+
+libraries:
+- name: webapp2
+  version: latest
+- name: jinja2
+  version: latest
