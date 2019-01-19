@@ -1,14 +1,21 @@
 # [START imports]
 import os
 import urllib
-
+import httplib, base64, json
+from google.appengine.api import urlfetch
 from google.appengine.api import users
 from google.appengine.ext import ndb
 
 import jinja2
 import webapp2
 
+
 DEFAULT_DISPLAY = "Heading"
+CLIENT_ID = "4f2c1f999a4c480f9d9eea2f82b53723"
+CLIENT_SECRET = "ba1c5975884d4ba080e84b8540b1bc6a"
+REDIRECT_URI = "https://s3488797-cc2019.appspot.com/callback"
+SCOPES = "user-read-private user-read-recently-played user-read-currently-playing"
+encoded = base64.b64encode(CLIENT_ID + ":" + CLIENT_SECRET)
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -19,22 +26,6 @@ def Render_template(template_values, handler):
     template = JINJA_ENVIRONMENT.get_template('index.html')
     handler.response.write(template.render(template_values))
 
-class Display1(webapp2.RequestHandler):
-    def get(self):
-        display1_text = "Connected through Display 1"
-        template_values = {
-            'message': display1_text
-        }
-        Render_template(template_values, self)
-
-class Display2(webapp2.RequestHandler):
-    def get(self):
-        display2_text = "Connect through Display 2"
-        template_values = {
-            'message': display2_text
-        }
-        Render_template(template_values, self)
-
 class Display_default(webapp2.RequestHandler):
     def get(self):
         disp = "Connected through default url"
@@ -43,18 +34,48 @@ class Display_default(webapp2.RequestHandler):
         }
         Render_template(template_values, self)
 
-class Data_return(webapp2.RequestHandler):
+class CallBack(webapp2.RequestHandler):
     def get(self):
         display_text = DEFAULT_DISPLAY
-        data_content = self.request.get()
-        template_values = {
-            'message': display_text,
-            'content':
+        auth_code = self.request.get(argument_name='code')
+        endpoint = "https://accounts.spotify.com/api/token"
+        payload = {
+            'grant_type': "authorization_code",
+            'code': auth_code,
+            'redirect_uri': REDIRECT_URI,
+            'client_id': CLIENT_ID,
+            'client_secrret': CLIENT_SECRET
         }
+        fetch_details = {
+            'method': 'post',
+            'payload':payload
+        }
+        post_results = urlfetch.fetch(url=endpoint, options=fetch_details)
+        if(post_results.status_code == 200):
+            results = json.loads(post_results.text)
+            display_text = "Successfully received authentication"
+        else:
+            display_text = "An error occured, Code: " + str(post_results.status_code)
+
+        template_values = {
+            'message': display_text
+        }
+        Render_template(template_values, self)
+
+class Login(webapp2.RequestHandler):
+    def get(self):
+        endpoint = "https://accounts.spotify.com/authorize"
+        payload = {
+            'client_id': CLIENT_ID,
+            'response_type': "code",
+            'redirect_uri': REDIRECT_URI,
+            'scope': SCOPES,
+        }
+        login_address = endpoint + "?" + urllib.urlencode(payload)
+        self.redirect(login_address)
 
 app = webapp2.WSGIApplication([
     ('/', Display_default),
-    ('/1', Display1),
-    ('/2', Display2),
-    ('/return', Data_return),
+    ('/callback:*', CallBack),
+    ('/login', Login)
 ], debug=True)

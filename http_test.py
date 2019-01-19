@@ -11,8 +11,25 @@ data = {
 headers = {
     'Authorization': header_string
 }
-encoded_data = urllib.urlencode(data)
 r = requests.post(target_url, data=data, headers=headers)
 print(r.status_code, r.reason)
-r_data = json.loads(r.text)
-print(r_data["access_token"])
+if (r.status_code == 200):
+    print("Got auth token")
+    r_data = json.loads(r.text)
+    access_token = r_data["access_token"]
+    headers = {
+        'Authorization': "Bearer "+access_token
+    }
+    endpoint = "https://api.spotify.com/v1/search"
+    payload = {
+        'q': "Less i know the better",
+        'type': "track",
+        'limit': "3"
+    }
+    get_string = endpoint + "?" + urllib.urlencode(payload)
+    print(get_string)
+    s = requests.get(get_string, headers=headers)
+    print(s.status_code, s.reason)
+    search_results = json.loads(s.text)
+    for item in search_results['tracks']['items']:
+        print(item['name'] + ", ID: " + item['id'])
