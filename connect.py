@@ -38,28 +38,34 @@ class CallBack(webapp2.RequestHandler):
     def get(self):
         display_text = DEFAULT_DISPLAY
         auth_code = self.request.get(argument_name='code')
-        endpoint = "https://accounts.spotify.com/api/token"
+        endpoint = 'https://accounts.spotify.com/api/token'
         payload = {
             'grant_type': "authorization_code",
             'code': auth_code,
-            'redirect_uri': REDIRECT_URI,
-            'client_id': CLIENT_ID,
-            'client_secrret': CLIENT_SECRET
+            'redirect_uri': REDIRECT_URI
         }
-        fetch_details = {
-            'method': 'post',
-            'payload':payload
+        header_string = base64.b64encode(CLIENT_ID + ':' + CLIENT_SECRET)
+        headers = {
+            'Authorization': 'Basic ' + header_string
         }
-        post_results = urlfetch.fetch(url=endpoint, options=fetch_details)
+        post_results = urlfetch.fetch(
+            url=endpoint,
+            payload=urllib.urlencode(payload),
+            method=urlfetch.POST,
+            headers=headers
+        )
+
+        results = json.loads(post_results.content)
         if(post_results.status_code == 200):
-            results = json.loads(post_results.text)
             display_text = "Successfully received authentication"
+            content = results
         else:
             display_text = "An error occured, Code: " + str(post_results.status_code)
-
+            content = post_results
         template_values = {
-            'message': display_text
-        }
+            'message': display_text,
+            'content': results
+      }
         Render_template(template_values, self)
 
 class Login(webapp2.RequestHandler):
