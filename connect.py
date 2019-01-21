@@ -56,17 +56,21 @@ class CallBack(webapp2.RequestHandler):
         )
 
         results = json.loads(post_results.content)
-        if(post_results.status_code == 200):
-            display_text = "Successfully received authentication"
-            content = results
-        else:
+        if(post_results.status_code != 200):
             display_text = "An error occured, Code: " + str(post_results.status_code)
             content = post_results
+            template_values = {
+                'message': display_text,
+                'content': results
+                }
+            Render_template(template_values, self)
+        access_token = results['access_token']
+        refresh_token = results['refresh_token']
         template_values = {
-            'message': display_text,
-            'content': results
-      }
+            'message': "Successfully authenticated and Received access token"
+        }
         Render_template(template_values, self)
+
 
 class Login(webapp2.RequestHandler):
     def get(self):
