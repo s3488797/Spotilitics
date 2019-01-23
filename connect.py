@@ -6,6 +6,7 @@ from google.appengine.api import urlfetch
 from google.appengine.api import users
 from google.appengine.ext import ndb
 
+import database.py
 import jinja2
 import webapp2
 
@@ -66,6 +67,7 @@ class CallBack(webapp2.RequestHandler):
             Render_template(template_values, self)
         access_token = results['access_token']
         refresh_token = results['refresh_token']
+        #need to write this new user to the databse
         template_values = {
             'message': "Successfully authenticated and Received access token"
         }
@@ -84,8 +86,16 @@ class Login(webapp2.RequestHandler):
         login_address = endpoint + "?" + urllib.urlencode(payload)
         self.redirect(login_address)
 
+class Main(webapp2.RequestHandler):
+    def get(self):
+        #main space for the display of the content
+        #first connect to the database
+
 app = webapp2.WSGIApplication([
     ('/', Display_default),
     ('/callback:*', CallBack),
     ('/login', Login)
 ], debug=True)
+
+if __name__ == '__main__':
+    #this is where the database initiation must START

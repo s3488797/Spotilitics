@@ -10,3 +10,5 @@ libraries:
   version: latest
 - name: jinja2
   version: latest
+
+cloud_sql_instances: "s3488797-cc2019:australia-southeast1:sql-storage"
