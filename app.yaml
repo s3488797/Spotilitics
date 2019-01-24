@@ -1,4 +1,5 @@
 runtime: python27
+entrypoint: gunicorn -b :$PORT main:app
 api_version: 1
 threadsafe: distributed
 handlers:
@@ -11,4 +12,8 @@ libraries:
 - name: jinja2
   version: latest
 
-cloud_sql_instances: "s3488797-cc2019:australia-southeast1:sql-storage"
+runtime_config:
+ python_version: 2.7
+
+beta_settings:
+  cloud_sql_instances: "s3488797-cc2019:australia-southeast1:sql-storage"

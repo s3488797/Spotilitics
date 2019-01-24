@@ -90,6 +90,7 @@ class Main(webapp2.RequestHandler):
     def get(self):
         #main space for the display of the content
         #first connect to the database
+        print "placeholder\n"
 
 app = webapp2.WSGIApplication([
     ('/', Display_default),
@@ -99,3 +100,4 @@ app = webapp2.WSGIApplication([
 
 if __name__ == '__main__':
     #this is where the database initiation must START
+    print "placeholder for databse starting"
