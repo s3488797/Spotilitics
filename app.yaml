@@ -11,6 +11,10 @@ libraries:
   version: latest
 - name: jinja2
   version: latest
+- name: flask
+  version: 0.12
+- name: flask_sqlalchemy
+  version: lastest
 
 runtime_config:
  python_version: 2.7
