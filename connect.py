@@ -1,12 +1,12 @@
 # [START imports]
 import os
 import urllib
-import httplib, base64, json
+import httplib, base64, json, logging
 from google.appengine.api import urlfetch
 from google.appengine.api import users
 from google.appengine.ext import ndb
 
-import database.py
+import database
 import jinja2
 import webapp2
 
@@ -100,4 +100,4 @@ app = webapp2.WSGIApplication([
 
 if __name__ == '__main__':
     #this is where the database initiation must START
-    print "placeholder for databse starting"
+    logging.info("placeholder for databse starting")
