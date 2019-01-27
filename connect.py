@@ -1,12 +1,9 @@
-# [START imports]
 import os
 import urllib
 import httplib, base64, json, logging
 from google.appengine.api import urlfetch
-from google.appengine.api import users
 from google.appengine.ext import ndb
 
-import database
 import jinja2
 import webapp2
 
@@ -16,88 +13,98 @@ CLIENT_ID = "4f2c1f999a4c480f9d9eea2f82b53723"
 CLIENT_SECRET = "ba1c5975884d4ba080e84b8540b1bc6a"
 REDIRECT_URI = "https://s3488797-cc2019.appspot.com/callback"
 SCOPES = "user-read-private user-read-recently-played user-read-currently-playing"
-encoded = base64.b64encode(CLIENT_ID + ":" + CLIENT_SECRET)
+client_details = base64.b64encode(CLIENT_ID + ":" + CLIENT_SECRET)
 
-JINJA_ENVIRONMENT = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
-    extensions=['jinja2.ext.autoescape'],
-    autoescape=True)
+def login_address():
+    #""""Function to create link for user auth"""
+    endpoint = "https://accounts.spotify.com/authorize"
+    payload = {
+        'client_id': CLIENT_ID,
+        'response_type': "code",
+        'redirect_uri': REDIRECT_URI,
+        'scope': SCOPES,
+    }
+    target = endpoint + "?" + urllib.urlencode(payload)
+    return target
 
-def Render_template(template_values, handler):
-    template = JINJA_ENVIRONMENT.get_template('index.html')
-    handler.response.write(template.render(template_values))
+def make_request(endpoint, method, headers, payload=None):
+    #Function to make fetch requests
+    fetch_results = urlfetch.fetch(
+        url=endpoint,
+        payload=payload,
+        method=method,
+        headers=headers
+    )
+    results = json.loads(fetch_results.content)
+    if (fetch_results.status_code != 200):
+        error_string = "Error occured making " + method + " request"
+        if (method == urlfetch.POST):
+            error_string += ": " + results['error_description']
+        logging.error(error_string)
+        return False
+    return results
 
-class Display_default(webapp2.RequestHandler):
-    def get(self):
-        disp = "Connected through default url"
-        template_values = {
-            'message': disp
-        }
-        Render_template(template_values, self)
+def request_access(auth_code):
+    #""""Initial request for access of a user""""
+    endpoint = 'https://accounts.spotify.com/api/token'
+    payload = {
+        'grant_type': "authorization_code",
+        'code': auth_code,
+        'redirect_uri': REDIRECT_URI
+    }
+    headers = {
+        'Authorization': 'Basic ' + client_details
+    }
+    return make_request(
+        endpoint,
+        urlfetch.POST,
+        headers,
+        urllib.urlencode(payload)
+    )
 
-class CallBack(webapp2.RequestHandler):
-    def get(self):
-        display_text = DEFAULT_DISPLAY
-        auth_code = self.request.get(argument_name='code')
-        endpoint = 'https://accounts.spotify.com/api/token'
-        payload = {
-            'grant_type': "authorization_code",
-            'code': auth_code,
-            'redirect_uri': REDIRECT_URI
-        }
-        header_string = base64.b64encode(CLIENT_ID + ':' + CLIENT_SECRET)
-        headers = {
-            'Authorization': 'Basic ' + header_string
-        }
-        post_results = urlfetch.fetch(
-            url=endpoint,
-            payload=urllib.urlencode(payload),
-            method=urlfetch.POST,
-            headers=headers
-        )
+def request_refresh(refresh_token):
+    #"""Request for an access token using a refresh token"""
+    endpoint = 'https://accounts.spotify.com/api/token'
+    payload = {
+        'grant_type': "refresh_token",
+        'refresh_token': refresh_token
+    }
+    headers = {
+        'Authorization': 'Basic ' + client_details
+    }
+    return make_request(
+        url=endpoint,
+        method=urlfetch.POST,
+        headers=headers,
+        payload=urllib.urlencode(payload)
+    )
 
-        results = json.loads(post_results.content)
-        if(post_results.status_code != 200):
-            display_text = "An error occured, Code: " + str(post_results.status_code)
-            content = post_results
-            template_values = {
-                'message': display_text,
-                'content': results
-                }
-            Render_template(template_values, self)
-        access_token = results['access_token']
-        refresh_token = results['refresh_token']
-        #need to write this new user to the databse
-        template_values = {
-            'message': "Successfully authenticated and Received access token"
-        }
-        Render_template(template_values, self)
+def get_user_data(access_token):
+    endpoint = "https://api.spotify.com/v1/me"
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer " + access_token
+    }
+    return make_request(
+        endpoint,
+        urlfetch.GET,
+        headers
+    )
 
-
-class Login(webapp2.RequestHandler):
-    def get(self):
-        endpoint = "https://accounts.spotify.com/authorize"
-        payload = {
-            'client_id': CLIENT_ID,
-            'response_type': "code",
-            'redirect_uri': REDIRECT_URI,
-            'scope': SCOPES,
-        }
-        login_address = endpoint + "?" + urllib.urlencode(payload)
-        self.redirect(login_address)
-
-class Main(webapp2.RequestHandler):
-    def get(self):
-        #main space for the display of the content
-        #first connect to the database
-        print "placeholder\n"
-
-app = webapp2.WSGIApplication([
-    ('/', Display_default),
-    ('/callback:*', CallBack),
-    ('/login', Login)
-], debug=True)
-
-if __name__ == '__main__':
-    #this is where the database initiation must START
-    logging.info("placeholder for databse starting")
+def get_listens(access_token):
+    endpoint = "https://api.spotify.com/v1/me/player/recently-played"
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer " + access_token
+    }
+    payload = {
+        'limit': 50
+    }
+    return make_request(
+        url=endpoint,
+        method=urlfetch.GET,
+        headers=headers,
+        payload=payload
+    )

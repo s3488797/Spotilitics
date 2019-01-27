@@ -4,8 +4,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+temp_id = 0
 
-def init_databse():
+def init_databse_connecton():
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
     app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
@@ -13,6 +14,26 @@ def init_databse():
     with app.app_context():
         db.create_all()
     print("All Created")
+
+def sql_to_dict(row):
+    #"""Translates a SQLAlchemy model instance into a dictionary"""
+    data = row.__dict__.copy()
+    data['id'] = row.id
+    data.pop('_sa_instance_state')
+    return data
+
+def add_user(data):
+    # Method to add user to the database
+    data['id'] = next_user_id()
+    user = User(**data)
+    db.session.add(user)
+    db.session.commit()
+    return sql_to_dict(user)
+
+def next_user_id():
+    # TODO method to get the next id in the database to be added
+    temp_id += 1
+    return temp_id
 
 #Models
 class User(db.Model):

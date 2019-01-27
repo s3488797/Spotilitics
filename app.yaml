@@ -4,7 +4,7 @@ api_version: 1
 threadsafe: distributed
 handlers:
 - url: /.*
-  script: connect.app
+  script: app.app
 
 libraries:
 - name: webapp2
