@@ -102,7 +102,7 @@ class Error_occured(webapp2.RequestHandler):
 
 class Init_db(webapp2.RequestHandler):
     def get(self):
-        database.init_databse_connecton()
+        database.init_database_connecton()
         template_values = {
             'message': "Attempting to init the database"
         }

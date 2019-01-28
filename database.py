@@ -2,21 +2,21 @@ import os
 import config
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import logging
 
 db = SQLAlchemy()
-temp_id = 0
 
-def init_databse_connecton():
+def init_database_connecton():
     app = Flask(__name__)
-    app.config.from_pyfile('config.py')
+    app.config.from_object(config)
     app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
-    db.init_app(app)
     with app.app_context():
+        db.init_app(app)
         db.create_all()
-    print("All Created")
+    logging.info("All Created")
 
 def sql_to_dict(row):
-    #"""Translates a SQLAlchemy model instance into a dictionary"""
+    # Translates a SQLAlchemy model instance into a dictionary
     data = row.__dict__.copy()
     data['id'] = row.id
     data.pop('_sa_instance_state')
@@ -24,16 +24,10 @@ def sql_to_dict(row):
 
 def add_user(data):
     # Method to add user to the database
-    data['id'] = next_user_id()
     user = User(**data)
     db.session.add(user)
     db.session.commit()
     return sql_to_dict(user)
-
-def next_user_id():
-    # TODO method to get the next id in the database to be added
-    temp_id += 1
-    return temp_id
 
 #Models
 class User(db.Model):
@@ -79,7 +73,7 @@ class Track(db.Model):
 class Listen(db.Model):
     __tablename__ = 'listens'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, )
     track_id = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime())
 
