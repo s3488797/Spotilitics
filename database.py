@@ -5,15 +5,22 @@ from flask_sqlalchemy import SQLAlchemy
 import logging
 
 db = SQLAlchemy()
+app = Flask(__name__)
 
 def init_database_connecton():
-    app = Flask(__name__)
     app.config.from_pyfile('config.py')
     app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
     with app.app_context():
         db.init_app(app)
-        db.create_all()
     logging.info("All Created")
+
+def create_tables():
+    with app.app_context():
+        db.create_all()
+
+def close_connection():
+    with app.app_context():
+        db.dispose()
 
 def sql_to_dict(row):
     # Translates a SQLAlchemy model instance into a dictionary
@@ -24,10 +31,10 @@ def sql_to_dict(row):
 
 def add_user(data):
     # Method to add user to the database
-    user = User(**data)
-    db.session.add(user)
-    db.session.commit()
-    return sql_to_dict(user)
+    with app.app_context():
+        user = User(**data)
+        db.session.add(user)
+        db.session.commit()
 
 #Models
 class User(db.Model):
@@ -38,8 +45,8 @@ class User(db.Model):
     joined = db.Column('joined', db.DateTime())
     last_check = db.Column('last_check', db.DateTime())
     listens = db.Column('listens', db.Integer)
-    auth_token = db.Column('auth_token', db.String(255))
-    refresh_token = db.Column('refresh_token', db.String(255))
+    auth_token = db.Column('auth_token', db.String(320))
+    refresh_token = db.Column('refresh_token', db.String(320))
 
     def __repr__(self):
         r_string = "User: "+self.display_name+", joined: "+self.joined+" with " + self.listens + " listens"

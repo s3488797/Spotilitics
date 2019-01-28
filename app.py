@@ -60,13 +60,14 @@ class CallBack(webapp2.RequestHandler):
             'auth_token': self.request.get(argument_name='code'),
             'refresh_token': refresh_token
         }
-        if (databse.add_user(user_data_to_add) == False):
+        database.init_database_connecton()
+        if (database.add_user(user_data_to_add) == False):
             template_values = {
                 'message': "something messed up with adding to the DB"
             }
         else:
             template_values = {
-                'message': "Successfully got user info",
+                'message': "Successfully saved user info",
                 'content': user_info
             }
         #need to write this new user to the databse
@@ -76,7 +77,10 @@ class CallBack(webapp2.RequestHandler):
 
 class Login(webapp2.RequestHandler):
     def get(self):
-        self.redirect(connect.login_address())
+        target = connect.login_address()
+        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.write("redirecting to: " + target)
+        self.redirect(target)
 
 class Main(webapp2.RequestHandler):
     def get(self):
@@ -103,6 +107,7 @@ class Error_occured(webapp2.RequestHandler):
 class Init_db(webapp2.RequestHandler):
     def get(self):
         database.init_database_connecton()
+        database.create_tables()
         template_values = {
             'message': "Attempting to init the database"
         }
