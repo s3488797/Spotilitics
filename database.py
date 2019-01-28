@@ -8,7 +8,7 @@ db = SQLAlchemy()
 
 def init_database_connecton():
     app = Flask(__name__)
-    app.config.from_object(config)
+    app.config.from_pyfile('config.py')
     app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
     with app.app_context():
         db.init_app(app)
