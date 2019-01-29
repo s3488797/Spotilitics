@@ -65,13 +65,13 @@ class Track(db.Model):
     pitch_key = db.Column('pitch_key', db.Integer)
     loudness = db.Column('loudness', db.Integer)
     tempo_bpm = db.Column('tempo_bpm', db.Integer)
-    q0 = db.Column('accousticness', db.Integer)
-    q1 = db.Column('danceability', db.Integer)
-    q2 = db.Column('energy', db.Integer)
-    q3 = db.Column('intrumentalness', db.Integer)
-    q4 = db.Column('liveness', db.Integer)
-    q5 = db.Column('speechiness', db.Integer)
-    q6 = db.Column('valence', db.Integer)
+    q0 = db.Column('accousticness', db.Float)
+    q1 = db.Column('danceability', db.Float)
+    q2 = db.Column('energy', db.Float)
+    q3 = db.Column('intrumentalness', db.Float)
+    q4 = db.Column('liveness', db.Float)
+    q5 = db.Column('speechiness', db.Float)
+    q6 = db.Column('valence', db.Float)
 
     def __repr__(self):
         r_string = "Track: " + self.name + " by " + self.artists[0]

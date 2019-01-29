@@ -35,9 +35,13 @@ def make_request(endpoint, method, headers, payload=None):
         method=method,
         headers=headers
     )
+    logging.info("Received: ")
+    logging.info(fetch_results)
     results = json.loads(fetch_results.content)
+    logging.info("Containing: ")
+    logging.info(results)
     if (fetch_results.status_code != 200):
-        error_string = "Error occured making " + method + " request"
+        error_string = "Error occured making " + str(method) + " request"
         if (method == urlfetch.POST):
             error_string += ": " + results['error_description']
         logging.error(error_string)
@@ -45,7 +49,7 @@ def make_request(endpoint, method, headers, payload=None):
     return results
 
 def request_access(auth_code):
-    #""""Initial request for access of a user""""
+    # Initial request for access of a user
     endpoint = 'https://accounts.spotify.com/api/token'
     payload = {
         'grant_type': "authorization_code",
@@ -73,11 +77,22 @@ def request_refresh(refresh_token):
         'Authorization': 'Basic ' + client_details
     }
     return make_request(
-        url=endpoint,
-        method=urlfetch.POST,
-        headers=headers,
-        payload=urllib.urlencode(payload)
+        endpoint,
+        urlfetch.POST,
+        headers,
+        urllib.urlencode(payload)
     )
+
+def get_generic_token():
+    endpoint = "https://accounts.spotify.com/api/token"
+    method = urlfetch.POST
+    headers =  {
+        'Authorization': 'Basic ' + client_details
+    }
+    payload = {
+        'grant_type': "client_credentials"
+    }
+    return make_request(endpoint, method, headers, urllib.urlencode(payload))
 
 def get_user_data(access_token):
     endpoint = "https://api.spotify.com/v1/me"
@@ -103,8 +118,23 @@ def get_listens(access_token):
         'limit': 50
     }
     return make_request(
-        url=endpoint,
-        method=urlfetch.GET,
-        headers=headers,
-        payload=payload
+        endpoint,
+        urlfetch.GET,
+        headers,
+        urllib.urlencode(payload)
     )
+
+def get_multi_track_features(id_list_string):
+    token_obj = get_generic_token()
+    if (token_obj == False): return False
+    access_token = token_obj['access_token']
+    endpoint = "https://api.spotify.com/v1/audio-features"
+    method = urlfetch.GET
+    headers = {
+        'Authorization': "Bearer " + access_token
+    }
+    payload = {
+        'ids': id_list_string
+    }
+    logging.info("Making request for ids: " + id_list_string)
+    return make_request(endpoint, method, headers, urllib.urlencode(payload))

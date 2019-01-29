@@ -27,7 +27,7 @@ def Render_template(template_values, handler):
     template = JINJA_ENVIRONMENT.get_template('index.html')
     handler.response.write(template.render(template_values))
 
-class Display_default(webapp2.RequestHandler):
+class Main(webapp2.RequestHandler):
     def get(self):
         disp = "Connected through default url"
         template_values = {
@@ -60,18 +60,25 @@ class CallBack(webapp2.RequestHandler):
             'auth_token': self.request.get(argument_name='code'),
             'refresh_token': refresh_token
         }
-        database.init_database_connecton()
-        if (database.add_user(user_data_to_add) == False):
-            template_values = {
-                'message': "something messed up with adding to the DB"
-            }
-        else:
-            template_values = {
-                'message': "Successfully saved user info",
-                'content': user_info
-            }
         #need to write this new user to the databse
-
+        database.init_database_connecton()
+        if (database.add_user(user_data_to_add) == False): self.redirect('/error')
+        #now lets get some listen data and send it to the html
+        listens = connect.get_listens(access_token)
+        if (listens == False): self.redirect('/error')
+        # First construct a list of ids to get details for
+        id_string_list = ""
+        for track in listens['items']:
+            id_string_list += track['track']['id'] + ","
+        id_string_list.strip(',')
+        #now get the details of this list
+        features = connect.get_multi_track_features(id_string_list)
+        if (features == False): self.redirect('/error')
+        #ok now construct our models
+        template_values = {
+            'message': "Got these features for " + user_info['display_name'],
+            'content': features
+        }
         Render_template(template_values, self)
 
 
@@ -81,12 +88,6 @@ class Login(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.write("redirecting to: " + target)
         self.redirect(target)
-
-class Main(webapp2.RequestHandler):
-    def get(self):
-        #main space for the display of the content
-        #first connect to the database
-        print "placeholder\n"
 
 class Declined(webapp2.RequestHandler):
     def get(self):
@@ -114,9 +115,10 @@ class Init_db(webapp2.RequestHandler):
         Render_template(template_values, self)
 
 app = webapp2.WSGIApplication([
-    ('/', Display_default),
-    ('/callback:*', CallBack),
+    ('/', Login),
     ('/login', Login),
+    ('/main', Main),
+    ('/callback:*', CallBack),
     ('/decline', Declined),
     ('/error', Error_occured),
     ('/init_db', Init_db) #REMOVE THIS LATER

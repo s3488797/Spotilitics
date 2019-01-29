@@ -8,16 +8,15 @@ CLOUDSQL_PASSWORD = 'Cloud2019'
 CLOUDSQL_DATABASE = 'spotify_project'
 CLOUDSQL_CONNECTION_NAME = 's3488797-cc2019:australia-southeast1:sql-storage'
 
-LOCAL_SQLALCHEMY_DATABASE_URI = (
-    'mysql+pymysql://root:Cloud2019@127.0.0.1:3306/spotify_project').format(
+LOCAL_URI_STRING = 'mysql+pymysql://'+CLOUDSQL_USER+':'+CLOUDSQL_PASSWORD+'@127.0.0.1:3306/'+CLOUDSQL_DATABASE
+LOCAL_SQLALCHEMY_DATABASE_URI = (LOCAL_URI_STRING).format(
         user=CLOUDSQL_USER, password=CLOUDSQL_PASSWORD,
         database=CLOUDSQL_DATABASE)
 
 # When running on App Engine a unix socket is used to connect to the cloudsql
 # instance.
-LIVE_SQLALCHEMY_DATABASE_URI = (
-    'mysql+pymysql://root:Cloud2019@localhost/spotify_project'
-    '?unix_socket=/cloudsql/s3488797-cc2019:australia-southeast1:sql-storage').format(
+LIVE_URI_STRING = 'mysql+pymysql://'+CLOUDSQL_USER+':'+CLOUDSQL_PASSWORD+'@localhost/'+CLOUDSQL_DATABASE+'?unix_socket=/'+DATA_BACKEND+'/'+CLOUDSQL_CONNECTION_NAME
+LIVE_SQLALCHEMY_DATABASE_URI = (LIVE_URI_STRING).format(
         user=CLOUDSQL_USER, password=CLOUDSQL_PASSWORD,
         database=CLOUDSQL_DATABASE, connection_name=CLOUDSQL_CONNECTION_NAME)
 
