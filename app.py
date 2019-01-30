@@ -1,7 +1,7 @@
 import os
 import urllib
 import httplib, base64, json, logging
-import datetime
+from datetime import datetime
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 
@@ -57,7 +57,7 @@ class CallBack(webapp2.RequestHandler):
         if (user_info == False): self.redirect('/error')
         #create dict of user data
         refresh_token = results['refresh_token']
-        joined = datetime.datetime.now()
+        joined = datetime.now()
         user_data_to_add = {
             'spotify_id': user_info['id'],
             'display_name': user_info['display_name'],
@@ -87,29 +87,32 @@ class CallBack(webapp2.RequestHandler):
         user_model.joined = joined
         user_model.listens_num = 50
         listen_data = []
-        for track, feature in zip(listen['items'], features):
+        for track, feature in zip(listens['items'], features['audio_features']):
             #construct a feature object
             temp_listen = models.Listen_model()
             temp_listen.title = track['track']['name']
-            temp_listen.artist = track['track']['artists'][0]
-            temp_listen.listened_at = track['played_at']
+            temp_listen.artist = track['track']['artists'][0]['name']
+            listened_at = track['played_at']
+            listened_at = track['played_at'][:-5]
+            temp_listen.listened_at = datetime.strptime(listened_at,"%Y-%m-%dT%H:%M:%S")
             temp_listen.explicit = track['track']['explicit']
             temp_listen.duration_ms = track['track']['duration_ms']
             temp_listen.pitch_key = feature['key']
             temp_listen.loudness = feature['loudness']
             temp_listen.tempo_bpm = feature['tempo']
-            temp_listen.accousticness = feature['accousticness']
+            temp_listen.acousticness = feature['acousticness']
             temp_listen.danceability = feature['danceability']
             temp_listen.energy = feature['energy']
-            temp_listen.intrumentalness = feature['intrumentalness']
+            temp_listen.instrumentalness = feature['instrumentalness']
             temp_listen.liveness = feature['liveness']
             temp_listen.speechiness = feature['speechiness']
             temp_listen.valence = feature['valence']
             #add it to the list
-            listen_data += temp_listen
+            listen_data += [temp_listen]
         user_model.listens_list = listen_data
         template_values = {
             'message': "Got these features for " + user_info['display_name'],
+            'user': user_model,
             'content': features
         }
         Render_template(template_values, self)
