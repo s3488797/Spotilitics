@@ -29,21 +29,20 @@ def login_address():
 
 def make_request(endpoint, method, headers, payload=None):
     #Function to make fetch requests
+    if (method == urlfetch.GET and payload != None):
+        endpoint = endpoint + "?" + urllib.urlencode(payload)
     fetch_results = urlfetch.fetch(
         url=endpoint,
         payload=payload,
         method=method,
         headers=headers
     )
-    logging.info("Received: ")
-    logging.info(fetch_results)
     results = json.loads(fetch_results.content)
-    logging.info("Containing: ")
-    logging.info(results)
     if (fetch_results.status_code != 200):
+        return results
         error_string = "Error occured making " + str(method) + " request"
         if (method == urlfetch.POST):
-            error_string += ": " + results['error_description']
+            error_string += ": " + str(results['error_description'])
         logging.error(error_string)
         return False
     return results
@@ -121,7 +120,7 @@ def get_listens(access_token):
         endpoint,
         urlfetch.GET,
         headers,
-        urllib.urlencode(payload)
+        payload
     )
 
 def get_multi_track_features(id_list_string):
@@ -131,10 +130,12 @@ def get_multi_track_features(id_list_string):
     endpoint = "https://api.spotify.com/v1/audio-features"
     method = urlfetch.GET
     headers = {
-        'Authorization': "Bearer " + access_token
+        'Authorization': "Bearer " + access_token,
+        'Accept': "application/json",
+        'Content-Type': "application/json"
     }
     payload = {
         'ids': id_list_string
     }
     logging.info("Making request for ids: " + id_list_string)
-    return make_request(endpoint, method, headers, urllib.urlencode(payload))
+    return make_request(endpoint, method, headers, payload)
