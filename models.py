@@ -12,7 +12,7 @@ class Listen_model(ndb.Model):
     title = ndb.StringProperty()
     artist = ndb.StringProperty()
     listened_at = ndb.DateTimeProperty()
-    genre = nbd.StringProperty()
+    #genre = nbd.StringProperty() # removed because finding this would require more api requests
     explicit = ndb.BooleanProperty()
     duration_ms = ndb.IntegerProperty()
     pitch_key = ndb.IntegerProperty()
