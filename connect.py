@@ -47,7 +47,7 @@ def make_request(endpoint, method, headers, payload=None):
         return False
     return results
 
-def request_access(auth_code):
+def request_user_access(auth_code):
     # Initial request for access of a user
     endpoint = 'https://accounts.spotify.com/api/token'
     payload = {
@@ -65,7 +65,7 @@ def request_access(auth_code):
         urllib.urlencode(payload)
     )
 
-def request_refresh(refresh_token):
+def refresh_user_access(refresh_token):
     #"""Request for an access token using a refresh token"""
     endpoint = 'https://accounts.spotify.com/api/token'
     payload = {
@@ -82,7 +82,7 @@ def request_refresh(refresh_token):
         urllib.urlencode(payload)
     )
 
-def get_generic_token():
+def request_generic_access():
     endpoint = "https://accounts.spotify.com/api/token"
     method = urlfetch.POST
     headers =  {
@@ -124,7 +124,7 @@ def get_listens(access_token):
     )
 
 def get_multi_track_features(id_list_string):
-    token_obj = get_generic_token()
+    token_obj = request_generic_access()
     if (token_obj == False): return False
     access_token = token_obj['access_token']
     endpoint = "https://api.spotify.com/v1/audio-features"

@@ -2,6 +2,7 @@ import os
 import config
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime as dt
 import logging
 
 db = SQLAlchemy()
@@ -45,12 +46,23 @@ class User(db.Model):
     joined = db.Column('joined', db.DateTime())
     last_check = db.Column('last_check', db.DateTime())
     listens = db.Column('listens', db.Integer)
-    auth_token = db.Column('auth_token', db.String(320))
     refresh_token = db.Column('refresh_token', db.String(320))
 
     def __repr__(self):
         r_string = "User: "+self.display_name+", joined: "+self.joined+" with " + self.listens + " listens"
         return r_string
+
+def construct_user_dict(user_info, refresh_token):
+    joined = dt.now()
+    user_dict = {
+        'spotify_id': user_info['id'],
+        'display_name': user_info['display_name'],
+        'joined': joined,
+        'last_check': joined,
+        'listens': 0,
+        'refresh_token': refresh_token
+    }
+    return user_dict
 
 class Track(db.Model):
     __tablename__ = 'tracks'
