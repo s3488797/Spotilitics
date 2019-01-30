@@ -45,16 +45,70 @@
         .mySlides {
             display: none;
         }
+        #myDIV {
+            width: 100%;
+            padding: 50px 0;
+            text-align: center;
+            background-color: white;
+            color: black;
+            margin-top: 20px;
+            bottom: auto;
+            border: 2px solid #e7e7e7;
+        }
     </style>
 
+    <br>
+    <br>
 
-        <h2 class="w3-center">Manual Slideshow</h2>
+    
+
+        <p align=center><strong> Welcome! Oliver  This is your musical analyse</strong></p>
+
 
         <div class="w3-content w3-display-container">
-            <img class="mySlides" src="https://www.coindesk.com/wp-content/uploads/2017/04/analysis-charts-e1493382374824.jpg" style="width:100%">
-            <img class="mySlides" src="https://cdn4.vectorstock.com/i/1000x1000/59/33/business-analyst-financial-data-analysis-web-icon-vector-14155933.jpg" style="width:100%">
+            
+            <div class="mySlides">
+                <img src="https://www.coindesk.com/wp-content/uploads/2017/04/analysis-charts-e1493382374824.jpg" style="width:100%" />  
+
+                <div class="text">
+                    <p>You spent xxx time in last week for xxx kinda music, xx songs last week </p>
+                </div>
+                <button onclick="myFunction()">More</button>
+                <div id="myDIV">
+                    Base on the data we gather from spotify.Your listen habbit is like this
+                </div>
+            </div>
+
+            <div class="mySlides">
+                <img src="https://cdn4.vectorstock.com/i/1000x1000/59/33/business-analyst-financial-data-analysis-web-icon-vector-14155933.jpg" style="width:100%" />  
+
+                <div class="text">
+                    <p>You love to listen this kind of music </p>
+                </div>
+               
+            </div>
+
+          <div class="mySlides">
+                <img src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/d6/40caf0acd911e6b47ba308e7536121/Analysis_block.jpg?auto=format%2Ccompress&dpr=2.625" style="width:100%" />  
+
+                <div class="text">
+                    <p>maybe this song is the one for you </p>
+                </div>
+                
+            </div>
+
+  <div class="mySlides">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRknsvr7E2eJgM3Ys_QUuyT12YqPZc671m_zdytPQ3c6Ee-jH8aSA" style="width:100%" />  
+
+                <div class="text">
+                    <p>hey babe </p>
+                </div>
+               
+            </div>
+
+            <!--<img class="mySlides" src="https://cdn4.vectorstock.com/i/1000x1000/59/33/business-analyst-financial-data-analysis-web-icon-vector-14155933.jpg" style="width:100%">
             <img class="mySlides" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/d6/40caf0acd911e6b47ba308e7536121/Analysis_block.jpg?auto=format%2Ccompress&dpr=2.625" style="width:100%">
-            <img class="mySlides" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRknsvr7E2eJgM3Ys_QUuyT12YqPZc671m_zdytPQ3c6Ee-jH8aSA" style="width:100%">
+            <img class="mySlides" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRknsvr7E2eJgM3Ys_QUuyT12YqPZc671m_zdytPQ3c6Ee-jH8aSA" style="width:100%">-->
 
             <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
             <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
@@ -86,6 +140,14 @@
                     x[i].style.display = "none";
                 }
                 x[slideIndex - 1].style.display = "block";
+            }
+            function myFunction() {
+                var x = document.getElementById("myDIV");
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                } else {
+                    x.style.display = "none";
+                }
             }
         </script>
     </body>
