@@ -75,13 +75,8 @@ class Main(Session_handler):
         #now lets get some listen data and send it to the html
         listens = connect.get_listens(access_token)
         if (listens == False): self.redirect('/error')
-        # First construct a list of ids to get details for
-        id_string_list = ""
-        for track in listens['items']:
-            id_string_list += track['track']['id'] + ","
-        id_string_list = id_string_list[:-1]
         #now get the details of this list
-        features = connect.get_multi_track_features(id_string_list)
+        features = connect.get_multi_track_features(listens)
         if (features == False): self.redirect('/error')
         #ok now construct our user model
         user_model = models.construct_user(display_name, listens, features)
@@ -109,7 +104,7 @@ class CallBack(Session_handler):
         self.session['access_token'] = access_token
         self.session['refresh_token'] = refresh_token
         #check if the user is already in the db
-        database.init_database_connecton()
+        database.init_database_connection()
         if (database.user_exists(user_info['id']) == False):
             #create dict of user data
             user_data_to_add = database.construct_user_dict(user_info, refresh_token)
@@ -144,7 +139,7 @@ class Error_occured(webapp2.RequestHandler):
 
 class Init_db(webapp2.RequestHandler):
     def get(self):
-        database.init_database_connecton()
+        database.init_database_connection()
         database.create_tables()
         template_values = {'message': "Attempting to init the database"}
         render_template(self, template_values, DEBUG_DISPLAY)

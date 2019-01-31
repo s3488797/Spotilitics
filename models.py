@@ -40,7 +40,7 @@ def construct_user(display_name, listens, features):
         temp_listen.artist = track['track']['artists'][0]['name']
         listened_at = track['played_at']
         listened_at = track['played_at'][:-5]
-        temp_listen.listened_at = dt.strptime(listened_at,"%Y-%m-%dT%H:%M:%S")
+        temp_listen.listened_at = spotify_string_to_datatime(listened_at)
         temp_listen.explicit = track['track']['explicit']
         temp_listen.duration_ms = track['track']['duration_ms']
         temp_listen.pitch_key = feature['key']
@@ -56,5 +56,7 @@ def construct_user(display_name, listens, features):
         #add it to the list
         listen_data += [temp_listen]
     user_model.listens_list = listen_data
-
     return user_model
+
+def spotify_string_to_datatime(t):
+    return dt.strptime(t,"%Y-%m-%dT%H:%M:%S")
