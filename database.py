@@ -10,7 +10,6 @@ app = Flask(__name__)
 
 def init_database_connecton():
     app.config.from_pyfile('config.py')
-    app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
     with app.app_context():
         db.init_app(app)
     logging.info("All Created")
@@ -36,6 +35,13 @@ def add_user(data):
         user = User(**data)
         db.session.add(user)
         db.session.commit()
+
+def user_exists(spotify_id):
+    # method to check if a user is in the db
+    with app.app_context():
+        query = db.session.query(User).filter(User.spotify_id == spotify_id)
+        result =  db.session.execute(db.session.query(query.exists()))
+        return result.first()[0]
 
 #Models
 class User(db.Model):

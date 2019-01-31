@@ -15,10 +15,6 @@ from webapp2_extras import sessions
 logging.basicConfig(filename='example.log',level=logging.DEBUG)
 
 DEFAULT_DISPLAY = "Heading"
-CLIENT_ID = "4f2c1f999a4c480f9d9eea2f82b53723"
-CLIENT_SECRET = "ba1c5975884d4ba080e84b8540b1bc6a"
-REDIRECT_URI = "https://s3488797-cc2019.appspot.com/callback"
-SCOPES = "user-read-private user-read-recently-played user-read-currently-playing"
 
 WELCOME_DISPLAY = "html/welcome.html"
 MAIN_DISPLAY = "html/analyse.html"
@@ -112,11 +108,13 @@ class CallBack(Session_handler):
         self.session['active_user'] = user_info['display_name']
         self.session['access_token'] = access_token
         self.session['refresh_token'] = refresh_token
-        #create dict of user data
-        user_data_to_add = database.construct_user_dict(user_info, refresh_token)
-        #need to write this new user to the databse
+        #check if the user is already in the db
         database.init_database_connecton()
-        if (database.add_user(user_data_to_add) == False): self.redirect('/error')
+        if (database.user_exists(user_info['id']) == False):
+            #create dict of user data
+            user_data_to_add = database.construct_user_dict(user_info, refresh_token)
+            if (database.add_user(user_data_to_add) == False): self.redirect('/error')
+
         # now go to the main page
         self.redirect('/main')
 
