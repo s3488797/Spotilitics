@@ -1,9 +1,16 @@
+<!DOCTYPE html>
+{% autoescape true %}
 <html>
+<head>
+</head>
 <body>
   <h1> {{ message }} </h1>
-  {% if user %}
-    <div> Welcome {{ user.display_name }}</div>
-  {% endif %}
-  <div>Received: {{ content }}</div>
+  <div>
+    {% if user %}
+      Welcome {{ user.display_name }}
+    {% endif %}
+    Recieved: {{ content }}
+  </div>
 </body>
 </html>
+{% endautoescape %}

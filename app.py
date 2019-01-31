@@ -151,6 +151,19 @@ class Init_db(webapp2.RequestHandler):
         template_values = {'message': "Attempting to init the database"}
         render_template(self, template_values, DEBUG_DISPLAY)
 
+class Debug(webapp2.RequestHandler):
+    def get(self):
+        v = {
+            'SERVER_NAME': str(os.environ.get('SERVER_NAME')),
+            'HTTP_HOST': str(os.environ.get('HTTP_HOST')),
+            'APPLICATION_ID': str(os.environ.get('APPLICATION_ID'))
+        }
+        template_values = {
+            'message': "Got these for Environment variables",
+            'content': v
+        }
+        render_template(self, template_values, DEBUG_DISPLAY)
+
 app = webapp2.WSGIApplication([
     ('/', Default_catch),
     ('/welcome', Welcome),
@@ -160,5 +173,6 @@ app = webapp2.WSGIApplication([
     ('/callback:*', CallBack),
     ('/decline', Declined),
     ('/error', Error_occured),
-    ('/init_db', Init_db)
+    ('/init_db', Init_db),
+    ('/debug', Debug)
 ], debug=True, config=handler_config)
