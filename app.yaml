@@ -3,6 +3,9 @@ entrypoint: gunicorn -b :$PORT main:app
 api_version: 1
 threadsafe: distributed
 handlers:
+- url: /task*
+  script: tasks.app
+  login: admin
 - url: /.*
   script: app.app
 

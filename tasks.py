@@ -17,7 +17,16 @@ logging.basicConfig(filename='example.log',level=logging.DEBUG)
 # config for session handling
 handler_config = {'webapp2_extras.sessions': {'secret_key': 'CloudComputing2019-Spotilics'}}
 
-JINJA_ENVIRONMENT = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
-    extensions=['jinja2.ext.autoescape'],
-    autoescape=True)
+class Default_catch(webapp2.RequestHandler):
+    def get(self):
+        #perform some function
+        return
+
+class Fetch_listens(webapp2.RequestHandler):
+    def get(self):
+        #function to update the listens for each user in the DB
+
+app = webapp2.WSGIApplication([
+    ('/', Default_catch),
+    ('/fetch_listens', Fetch_listens)
+], debug=True, config=handler_config)
