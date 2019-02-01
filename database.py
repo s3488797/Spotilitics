@@ -105,9 +105,9 @@ class Track(db.Model):
     __tablename__ = 'tracks'
     spotify_id = db.Column('spotify_id', db.String(255), primary_key=True, unique=True)
     name = db.Column('name', db.String(255))
-    artists = db.Column('artists', types.ARRAY(db.String(255)))
+    artists = db.Column('artists', types.ARRAY(db.String(255)))# TODO This is currently not accepted
     album = db.Column('album', db.String(255))
-    genre = db.Column('genre', types.ARRAY(db.String(255)))
+    genre = db.Column('genre', types.ARRAY(db.String(255))) # TODO This is currently not accepted
     popularity = db.Column('popularity', db.Integer)
     explicit = db.Column('explicit', db.Boolean)
     duration_ms = db.Column('duration_ms', db.Integer)
