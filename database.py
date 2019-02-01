@@ -32,13 +32,28 @@ def sql_to_dict(row):
         data.pop('_sa_instance_state')
     return data
 
+# ADD methods, I really dont like these and would much rather get __init__ working
+# Method to add user to the database
 def add_user(data):
-    # Method to add user to the database
     with app.app_context():
         user = User(**data)
         db.session.add(user)
         db.session.commit()
         return user
+
+def add_track(data):
+    with app.app_context():
+        track = Track(**data)
+        db.session.add(track)
+        db.session.commit()
+        return track
+
+def add_listen(data):
+    with app.app_context():
+        listen = Listen(**data)
+        db.session.add(listen)
+        db.session.commit()
+        return listen
 
 def add(object):
     with app.app_context():
@@ -69,14 +84,20 @@ def all_users_as_list():
 # method to retrieve user by id
 def get_user(spotify_id):
     with app.app_context():
-        return User.query.filter(username=form.username.data).first(type.spotify_id == spotify_id)
+        return User.query.filter(User.spotify_id == spotify_id).first()
+
+def get_user_test(spotify_id):
+    with app.app_context():
+        query = db.session.query(User).filter(User.spotify_id == spotify_id)
+        result =  db.session.execute(db.session.query(query.exists()))
+        return result.first()
 
 def update_user_listens(new_listens, spotify_id):
     with app.app_context():
-        user = get_user(spotify_id)
+        user = db.session.query(User).filter(User.spotify_id == spotify_id).first()
         user.listens += new_listens
         user.last_check = dt.now()
-        session.commit()
+        db.session.commit()
 
 #Models
 class User(db.Model):
@@ -105,9 +126,9 @@ class Track(db.Model):
     __tablename__ = 'tracks'
     spotify_id = db.Column('spotify_id', db.String(255), primary_key=True, unique=True)
     name = db.Column('name', db.String(255))
-    artists = db.Column('artists', types.ARRAY(db.String(255)))# TODO This is currently not accepted
-    album = db.Column('album', db.String(255))
-    genre = db.Column('genre', types.ARRAY(db.String(255))) # TODO This is currently not accepted
+    #artists = db.Column('artists', types.ARRAY(db.String(255)))# TODO This is currently not accepted
+    #album = db.Column('album', db.String(255))
+    #genre = db.Column('genre', types.ARRAY(db.String(255))) # TODO This is currently not accepted
     popularity = db.Column('popularity', db.Integer)
     explicit = db.Column('explicit', db.Boolean)
     duration_ms = db.Column('duration_ms', db.Integer)
@@ -123,35 +144,65 @@ class Track(db.Model):
     q6 = db.Column('valence', db.Float)
 
     #this constructor specifily accepts the spotify API models
-    def __init__(track, feature, genres):
-        self.spotify_id = track['id']
-        self.name = track['name']
-        self.artists = [artist['name'] for artist in track['artists']]
-        self.album = track['album']['name']
-        self.genres = genres
-        self.explicit = track['explicit']
-        self.duration_ms = track['duration_ms']
-        self.pitch_key = feature['key']
-        self.loudness = feature['loudness']
-        self.tempo_bpm = feature['tempo']
-        self.q0 = feature['acousticness']
-        self.q1 = feature['danceability']
-        self.q2 = feature['energy']
-        self.q3 = feature['instrumentalness']
-        self.q4 = feature['liveness']
-        self.q5 = feature['speechiness']
-        self.q6 = feature['valence']
-        return self
+def create_track_dict(spotify_track, t_feature, genres=None):
+    data_dict = {
+        'spotify_id': spotify_track['id'],
+        'name': spotify_track['name'],
+        'popularity': spotify_track['popularity'],
+        'explicit': spotify_track['explicit'],
+        'duration_ms': spotify_track['duration_ms'],
+        'pitch_key': t_feature['key'],
+        'loudness': t_feature['loudness'],
+        'tempo_bpm': t_feature['tempo'],
+        'q0': t_feature['acousticness'],
+        'q1': t_feature['danceability'],
+        'q2': t_feature['energy'],
+        'q3': t_feature['instrumentalness'],
+        'q4': t_feature['liveness'],
+        'q5': t_feature['speechiness'],
+        'q6': t_feature['valence']
+    }
+    return data_dict
+
+def create_user_test(spotify_track, t_feature, genres=None):
+    u = User()
+    u.spotify_id = spotify_track['id']
+    u.name = spotify_track['name']
+    #u.artists = [artist['name'] for artist in track['artists']]
+    #u.album = track['album']['name']
+    #u.genres = genres
+    u.popularity = spotify_track['popularity']
+    u.explicit = spotify_track['explicit']
+    u.duration_ms = spotify_track['duration_ms']
+    u.pitch_key = t_feature['key']
+    u.loudness = t_feature['loudness']
+    u.tempo_bpm = t_feature['tempo']
+    u.q0 = t_feature['acousticness']
+    u.q1 = t_feature['danceability']
+    u.q2 = t_feature['energy']
+    u.q3 = t_feature['instrumentalness']
+    u.q4 = t_feature['liveness']
+    u.q5 = t_feature['speechiness']
+    u.q6 = t_feature['valence']
+    return u
 
 class Listen(db.Model):
     __tablename__ = 'listens'
     id = db.Column('id', db.Integer, primary_key=True)
-    user_id = db.Column('user_id', db.Integer, schema.ForeignKey("users.spotify_id"), nullable=False)
-    track_id = db.Column('track_id', db.Integer, schema.ForeignKey("tracks.spotify_id"), nullable=False)
+    user_id = db.Column('user_id', db.String(255), schema.ForeignKey("users.spotify_id"), nullable=False)
+    track_id = db.Column('track_id', db.String(255), schema.ForeignKey("tracks.spotify_id"), nullable=False)
     timestamp = db.Column('timestamp', db.DateTime())
 
-    def __init__(t_id, u_id, time):
-        self.user_id = u_id
-        self.track_id = t_id
-        self.timestamp = time
-        return self
+    #def __init__(t_id, u_id, time):
+    #    self.user_id = u_id
+    #    self.track_id = t_id
+    #    self.timestamp = time
+    #    return self
+
+def create_listen_dict(t_id, u_id, time):
+    data_dict = {
+        'user_id': u_id,
+        'track_id': t_id,
+        'timestamp': time
+    }
+    return data_dict

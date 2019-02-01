@@ -4,9 +4,12 @@ import httplib, base64, json, logging
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 
+from datetime import timedelta as td
+from datetime import datetime as dt
 import database
 import connect
 import models
+import tasks
 import jinja2
 import webapp2
 from webapp2_extras import sessions
@@ -89,11 +92,15 @@ class Main(Session_handler):
 
 class CallBack(Session_handler):
     def get(self):
-        if (self.request.get(argument_name='error') == 'access_denied'): self.redirect('/decline')
+        if (self.request.get(argument_name='error') == 'access_denied'):
+            self.redirect('/decline')
+            return
         #the user has authorised access
         auth_token = self.request.get(argument_name='code')
         access_request = connect.request_user_access(auth_token)
-        if (access_request == False): self.redirect('/error')
+        if (access_request == False):
+            self.redirect('/error')
+            return
         #now get info about the current user
         access_token = access_request['access_token']
         refresh_token = access_request['refresh_token']
@@ -109,7 +116,8 @@ class CallBack(Session_handler):
             #create dict of user data
             user_data_to_add = database.construct_user_dict(user_info, refresh_token)
             if (database.add_user(user_data_to_add) == False): self.redirect('/error')
-
+        # now record the first data for the user
+        tasks.update_user(database.get_user(user_info['id']))
         # now go to the main page
         self.redirect('/main')
 
@@ -151,9 +159,14 @@ class Debug(webapp2.RequestHandler):
             'HTTP_HOST': str(os.environ.get('HTTP_HOST')),
             'APPLICATION_ID': str(os.environ.get('APPLICATION_ID'))
         }
+        now = dt.now() + td(hours=11)
+        t = {
+            'Now datetime: ': now,
+            'Now timestamp: ': str(int((now - dt.utcfromtimestamp(0)).total_seconds() * 1000))
+        }
         template_values = {
             'message': "Got these for Environment variables",
-            'content': v
+            'content': t
         }
         render_template(self, template_values, DEBUG_DISPLAY)
 
