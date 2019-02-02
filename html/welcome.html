@@ -7,17 +7,7 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
-    <style>
-        body {
-            font-family: "Lato", sans-serif;
-        }
-
-        .mySlides {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="scripts/style.css">
 </head>
 
 
@@ -27,23 +17,6 @@
         <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
             <p align=CENTER><b>Welcome to Spotilics</b></p>
             <a class ="start" href="/login">Login</a>
-            <style>
-                .start {
-                    background-color: #4CAF50; /* Green */
-                    border: none;
-                    color: white;
-                    padding: 15px 32px;
-                    text-align: center;
-                    text-decoration: none;
-                    display: inline-block;
-                    font-size: 16px;
-                    margin: 4px 2px;
-                    cursor: pointer;
-                    -webkit-transition-duration: 0.4s; /* Safari */
-                    transition-duration: 0.4s;
-                    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-                }
-            </style>
         </div>
     </div>
 
@@ -57,24 +30,6 @@
         <i class="fa fa-linkedin w3-hover-opacity"></i>
 
     </footer>
-
-    <script>
-        // Automatic Slideshow - change image every 4 seconds
-        var myIndex = 0;
-        carousel();
-
-        function carousel() {
-            var i;
-            var x = document.getElementsByClassName("mySlides");
-            for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";
-            }
-            myIndex++;
-            if (myIndex > x.length) { myIndex = 1 }
-            x[myIndex - 1].style.display = "block";
-
-        }
-    </script>
-
+    <script type="text/javascript" src="scripts/content.js"></script>
 </body>
 </html>

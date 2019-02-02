@@ -4,151 +4,100 @@
 <title>Analyse</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.6.3/css/all.css' integrity='sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/' crossorigin='anonymous'>
+<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.6.3/css/all.css' integrity='sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/' crossorigin='anonymous'>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-    body {
-        font-family: "Lato", sans-serif;
-    }
-
-    .mySlides {
-        display: none;
-    }
-</style>
-
+<script type="text/javascript" src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
+<link rel="stylesheet" href="scripts/style.css">
 </head>
 
 <header>
-
-    <!-- Navbar -->
-    <div class="w3-top">
-        <div class="w3-bar w3-black w3-card">
-            <div class="w3-dropdown-hover w3-hide-small">
-                <button class="w3-padding-large w3-button" title="More"><i class="fas fa-bars"></i></button>
-                <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                    <a href="#" class="w3-bar-item w3-button">1</a>
-                    <a href="#" class="w3-bar-item w3-button">2</a>
-                    <a href="#" class="w3-bar-item w3-button">3</a>
-                </div>
-            </div>
-            <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-cog"></i></a>
-            <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-user"></i></a>
+  <div class="w3-top">
+    <div class="w3-bar w3-black w3-card">
+      <div class="w3-dropdown-hover w3-hide-small">
+        <button class="w3-padding-large w3-button" title="More"><i class="fas fa-bars"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+          <a href="#" class="w3-bar-item w3-button">1</a>
+          <a href="#" class="w3-bar-item w3-button">2</a>
+          <a href="#" class="w3-bar-item w3-button">3</a>
         </div>
+      </div>
+      <span align="CENTER">Welcome to spotilitics, {{ user.display_name }}</span>
+    <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-cog"></i></a>
+    <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-user"></i></a>
     </div>
+  </div>
 </header>
-
 <body>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <style>
-        .mySlides {
-            display: none;
-        }
-        #myDIV {
-            width: 100%;
-            padding: 50px 0;
-            text-align: center;
-            background-color: white;
-            color: black;
-            margin-top: 20px;
-            bottom: auto;
-            border: 2px solid #e7e7e7;
-        }
-    </style>
+</br></br>
+  <div class="w3-content w3-display-container" width="100%">
+    <div class="mySlides">
+      <div class="text">
+        <h2> Story 1: Times </h2>
+        <p>You've listened to {{ user.listens_num }} since joining us, an averge of 13 songs per day. Your highest so far has been 45 in one day!</p>
+        <p>Below you can see the times that you useualy listens to songs over different days</p>
+      </div>
+      <div class='tableauPlaceholder' id='viz1549094215053' style='position: relative'>
+        <noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ti&#47;TimeStamps_and_Traits&#47;TStampVSTraits2&#47;1_rss.png' style='border: none' /></a></noscript>
+        <object class='tableauViz'  style='display:none;'>
+          <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+          <param name='embed_code_version' value='3' />
+          <param name='site_root' value='' />
+          <param name='name' value='TimeStamps_and_Traits&#47;TStampVSTraits2' />
+          <param name='tabs' value='no' />
+          <param name='toolbar' value='yes' />
+          <param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ti&#47;TimeStamps_and_Traits&#47;TStampVSTraits2&#47;1.png' />
+          <param name='animate_transition' value='yes' />
+          <param name='display_static_image' value='yes' />
+          <param name='display_spinner' value='yes' />
+          <param name='display_overlay' value='yes' />
+          <param name='display_count' value='yes' />
+          <param name='filter' value='publish=yes' />
+        </object>
+      </div>
+      <script type='text/javascript'>
+      var divElement = document.getElementById('viz1549094215053');
+      var vizElement = divElement.getElementsByTagName('object')[0];
+      vizElement.style.width='100%';
+      vizElement.style.height=(divElement.offsetWidth*0.75)+'px';
+      var scriptElement = document.createElement('script');
+      scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+      vizElement.parentNode.insertBefore(scriptElement, vizElement);
+      </script>
+    </div>
+    <div class="mySlides">
+      <div class="text">
+        <h2>Story 2: Qualities</h2>
+        <p>You have a preference for accoustic music, with a varriety of danceability </p>
+        <p>Below is how danceable your songs are compared to other qualities</P>
+      </div>
+    </div>
+    <div class="mySlides">
+      <div class="text">
+        <h2>Story 3: Emotion</h2>
+        <p>Song on Spotify have a quality called valence, this tells how happy or sad a song might be perceived </p>
+        <p>Below shows the varrying levels of happyness and sadness in some genres you listen to</p>
+      </div>
+    </div>
+    <div class="mySlides">
+      <div class="text">
+        <h2>Story 4: Stream</h2>
+        <p>The song you listen to are quite often very popular with many spotify listeners, you highest popularity listne was "Some Song" with "some value" and your lowest was....</p>
 
-    <br>
-    <br>
-
-
-
-        <p align=center><strong> Welcome! {{ user.display_name }} This is your musical analyse</strong></p>
-
-
-        <div class="w3-content w3-display-container">
-
-            <div class="mySlides">
-                <img src="https://www.coindesk.com/wp-content/uploads/2017/04/analysis-charts-e1493382374824.jpg" style="width:100%" />
-
-                <div class="text">
-                    <p>You spent xxx time in last week for xxx kinda music, xx songs last week </p>
-                </div>
-                <button onclick="myFunction()">More</button>
-                <div id="myDIV">
-                    Base on the data we gather from spotify.Your listen habbit is like this
-                </div>
-            </div>
-
-            <div class="mySlides">
-                <img src="https://cdn4.vectorstock.com/i/1000x1000/59/33/business-analyst-financial-data-analysis-web-icon-vector-14155933.jpg" style="width:100%" />
-
-                <div class="text">
-                    <p>You listened to some songs </p>
-                </div>
-
-            </div>
-
-          <div class="mySlides">
-                <img src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/d6/40caf0acd911e6b47ba308e7536121/Analysis_block.jpg?auto=format%2Ccompress&dpr=2.625" style="width:100%" />
-
-                <div class="text">
-                    <p>maybe this song is the one for you </p>
-                </div>
-
-            </div>
-
-  <div class="mySlides">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRknsvr7E2eJgM3Ys_QUuyT12YqPZc671m_zdytPQ3c6Ee-jH8aSA" style="width:100%" />
-
-                <div class="text">
-                    <p>hey babe </p>
-                </div>
-
-            </div>
-
-            <!--<img class="mySlides" src="https://cdn4.vectorstock.com/i/1000x1000/59/33/business-analyst-financial-data-analysis-web-icon-vector-14155933.jpg" style="width:100%">
-            <img class="mySlides" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/d6/40caf0acd911e6b47ba308e7536121/Analysis_block.jpg?auto=format%2Ccompress&dpr=2.625" style="width:100%">
-            <img class="mySlides" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRknsvr7E2eJgM3Ys_QUuyT12YqPZc671m_zdytPQ3c6Ee-jH8aSA" style="width:100%">-->
-
-            <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
-            <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
-        </div>
-    <!-- Footer -->
-    <footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge">
-        <i class="fa fa-facebook-official w3-hover-opacity"></i>
-        <i class="fa fa-instagram w3-hover-opacity"></i>
-        <i class="fa fa-snapchat w3-hover-opacity"></i>
-        <i class="fa fa-pinterest-p w3-hover-opacity"></i>
-        <i class="fa fa-twitter w3-hover-opacity"></i>
-        <i class="fa fa-linkedin w3-hover-opacity"></i>
-
-    </footer>
-        <script>
-            var slideIndex = 1;
-            showDivs(slideIndex);
-
-            function plusDivs(n) {
-                showDivs(slideIndex += n);
-            }
-
-            function showDivs(n) {
-                var i;
-                var x = document.getElementsByClassName("mySlides");
-                if (n > x.length) { slideIndex = 1 }
-                if (n < 1) { slideIndex = x.length }
-                for (i = 0; i < x.length; i++) {
-                    x[i].style.display = "none";
-                }
-                x[slideIndex - 1].style.display = "block";
-            }
-            function myFunction() {
-                var x = document.getElementById("myDIV");
-                if (x.style.display === "none") {
-                    x.style.display = "block";
-                } else {
-                    x.style.display = "none";
-                }
-            }
-        </script>
-    </body>
+      </div>
+    </div>
+    <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+    <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+  </div>
+  <footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge" hight="10%" align="bottommiddle">
+    <i class="fa fa-facebook-official w3-hover-opacity"></i>
+    <i class="fa fa-instagram w3-hover-opacity"></i>
+    <i class="fa fa-snapchat w3-hover-opacity"></i>
+    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+    <i class="fa fa-twitter w3-hover-opacity"></i>
+    <i class="fa fa-linkedin w3-hover-opacity"></i>
+  </footer>
+  <script type="text/javascript" src="scripts/slides.js"></script>
+</body>
 </html>

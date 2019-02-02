@@ -105,7 +105,10 @@ class CallBack(Session_handler):
         access_token = access_request['access_token']
         refresh_token = access_request['refresh_token']
         user_info = connect.get_user_data(access_token)
-        if (user_info == False): self.redirect('/error')
+        if (user_info == False):
+            self.redirect('/error')
+            return
+        #now we need to write a cookie so that the server isnt always requesting to spotify
         # write info to the session so it can be picked up easy later
         self.session['active_user'] = user_info['display_name']
         self.session['access_token'] = access_token
