@@ -77,10 +77,14 @@ class Main(Session_handler):
         refresh_token = self.session.get('refresh_token')
         #now lets get some listen data and send it to the html
         listens = connect.get_listens(access_token)
-        if (listens == False): self.redirect('/error')
+        if (listens == False):
+            self.redirect('/error')
+            return
         #now get the details of this list
         features = connect.get_multi_track_features(listens)
-        if (features == False): self.redirect('/error')
+        if (features == False):
+            self.redirect('/error')
+            return
         #ok now construct our user model
         user_model = models.construct_user(display_name, listens, features)
         template_values = {
