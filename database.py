@@ -81,10 +81,19 @@ def all_users_as_list():
         users = User.query.all()
         return users
 
+# method to get all listens of a user
+def get_all_listens(spotify_id):
+    with app.app_context():
+        return Listen.query.filter(Listen.user_id == spotify_id).all()
+
 # method to retrieve user by id
 def get_user(spotify_id):
     with app.app_context():
         return User.query.filter(User.spotify_id == spotify_id).first()
+
+def get_track(spotify_id):
+    with app.app_context():
+        return Track.query.filter(Track.spotify_id == spotify_id).first()
 
 def get_user_test(spotify_id):
     with app.app_context():

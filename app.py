@@ -73,20 +73,9 @@ class Main(Session_handler):
             logging.info("Detected noone was logged in")
             self.redirect('/welcome')
             return
-        access_token = self.session.get('access_token')
-        refresh_token = self.session.get('refresh_token')
-        #now lets get some listen data and send it to the html
-        listens = connect.get_listens(access_token)
-        if (listens == False):
-            self.redirect('/error')
-            return
-        #now get the details of this list
-        features = connect.get_multi_track_features(listens)
-        if (features == False):
-            self.redirect('/error')
-            return
+        database.init_database_connection()
         #ok now construct our user model
-        user_model = models.construct_user(display_name, listens, features)
+        user_model = models.construct_user_from_db(self.session.get('active_user'))
         template_values = {
             'message': "Got these features for " + display_name,
             'user': user_model,
@@ -114,7 +103,7 @@ class CallBack(Session_handler):
             return
         #now we need to write a cookie so that the server isnt always requesting to spotify
         # write info to the session so it can be picked up easy later
-        self.session['active_user'] = user_info['display_name']
+        self.session['active_user'] = user_info['id']
         self.session['access_token'] = access_token
         self.session['refresh_token'] = refresh_token
         #check if the user is already in the db
@@ -159,22 +148,16 @@ class Init_db(webapp2.RequestHandler):
         template_values = {'message': "Attempting to init the database"}
         render_template(self, template_values, DEBUG_DISPLAY)
 
-class Debug(webapp2.RequestHandler):
+class Debug(Session_handler):
     def get(self):
-        v = {
-            'SERVER_NAME': str(os.environ.get('SERVER_NAME')),
-            'HTTP_HOST': str(os.environ.get('HTTP_HOST')),
-            'APPLICATION_ID': str(os.environ.get('APPLICATION_ID'))
-        }
-        now = dt.now() + td(hours=11)
-        t = {
-            'Now datetime: ': now,
-            'Now timestamp: ': str(int((now - dt.utcfromtimestamp(0)).total_seconds() * 1000))
-        }
+        database.init_database_connection()
+        #ok now construct our user model
+        user_model = models.construct_user_from_db("ladecaz")
         template_values = {
             'message': "Got these for Environment variables",
-            'content': t
+            'content': user_model
         }
+        database.close_connection()
         render_template(self, template_values, DEBUG_DISPLAY)
 
 app = webapp2.WSGIApplication([

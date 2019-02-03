@@ -10,10 +10,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script type="text/javascript" src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
 <script type="text/javascript">
-        var vizList = ["http://public.tableau.com/views/RegionalSampleWorkbook/Flights",
+        var vizList = [
+            "https://public.tableau.com/views/TWB3/Dashboard1?:embed=y&:display_count=yes&publish=yes",
             "https://public.tableau.com/views/TimeStamps_and_Traits/TStampVSTraits2?:embed=y&:display_count=yes&publish=yes",
-            "https://10ay.online.tableau.com/t/spotilitics/views/TWB1_online/Sheet12/alistair.grevis-james@csl.com.au/Characteristics?iframeSizedToWindow=true&:embed=y&:showAppBanner=false&:display_count=no&:showVizHome=no",
-            "http://public.tableau.com/views/RegionalSampleWorkbook/Stocks",
+            "https://public.tableau.com/views/TWB2_0/Sheet52?:embed=y&:display_count=yes&publish=yes",
+            "https://public.tableau.com/views/RegionalSampleWorkbook/Stocks",
             "https://10ay.online.tableau.com/#/site/spotilitics/workbooks/546684/views"];
 
         var viz,
@@ -23,8 +24,10 @@
         function createViz(vizPlusMinus) {
             var vizDiv = document.getElementById("vizContainer"),
                 options = {
-                    "User_id": userId,
-                    hideTabs: true
+                    hideTabs: true,
+                    hideToolbar: true,
+                    'User Id': "ladecaz",
+                    showShareOptions: false
                 };
 
             vizCount = vizCount + vizPlusMinus;
@@ -114,7 +117,7 @@ footer {
     <div class="mySlides">
       <div class="text">
         <h2> Story 1: Times </h2>
-        <p>You've listened to {{ user.listens_num }} since joining us, an averge of 13 songs per day. Your highest so far has been 45 in one day!</p>
+        <p>You've listened to {{ user.listens_num }} since joining us</p>
         <p>Below you can see the times that you useualy listens to songs over different days</p>
       </div>
     </div>
