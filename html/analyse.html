@@ -11,16 +11,15 @@
 <script type="text/javascript" src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
 <script type="text/javascript">
         var vizList = [
-            "https://public.tableau.com/views/TWB3/Dashboard1?:embed=y&:display_count=yes&publish=yes",
+            "https://public.tableau.com/views/TWB6/Dashboard1?:embed=y&:display_count=yes",
             "https://public.tableau.com/views/TimeStamps_and_Traits/TStampVSTraits2?:embed=y&:display_count=yes&publish=yes",
             "https://public.tableau.com/views/TWB2_0/Sheet52?:embed=y&:display_count=yes&publish=yes",
-            "https://public.tableau.com/views/RegionalSampleWorkbook/Stocks",
-            "https://10ay.online.tableau.com/#/site/spotilitics/workbooks/546684/views"];
+            "https://public.tableau.com/views/RegionalSampleWorkbook/Stocks"];
 
         var viz,
             vizLen = vizList.length,
             vizCount = 0;
-        var userId = "ladecaz";
+        var userId = "{{ user.spotify_id}}";
         function createViz(vizPlusMinus) {
             var vizDiv = document.getElementById("vizContainer"),
                 options = {
@@ -67,6 +66,11 @@ body {
 footer {
     background-color: var(--spotify-darkgrey);
 }
+.header-title {
+    text-align:center;
+    display:block;
+    margin: 0 auto;
+}
 .mySlides {
     display: none;
     height: 100%;
@@ -105,9 +109,9 @@ footer {
           <a href="#" class="w3-bar-item w3-button">3</a>
         </div>
       </div>
-      <span align="CENTER">Welcome to spotilitics, {{ user.display_name }}</span>
-    <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-cog"></i></a>
-    <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-user"></i></a>
+      <span class="header-title">Welcome to spotilitics, {{ user.display_name }}</span>
+    <a href="https://www.spotify.com/au/account/apps/" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-cog"></i></a>
+    <a href="/logout" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-user"></i></a>
     </div>
   </div>
 </header>
