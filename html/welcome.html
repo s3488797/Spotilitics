@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 
 <head>
     <title>Spotilics, Analysing your music</title>
@@ -7,33 +7,56 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="scripts/style.css">
+
+
     <style>
-    .start {
-        background-color: #4CAF50; /* Green */
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        -webkit-transition-duration: 0.4s; /* Safari */
-        transition-duration: 0.4s;
-        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-    }
-    </style>
+        :root {
+            --spotify-green: #1db954;
+            --spotify-main: #212121;
+            --spotify-black: #121212;
+            --spotify-grey: #181818;
+            --spotify-player: #535353;
+            --spotify-lightgrey: #b3b3b3;
+        }
+        body {
+            font-family: "Lato", sans-serif;
+            background-color: var(--spotify-green:);
+            width:100%;
+        }
+
+        .mySlides {
+            display: none;
+        }
+
+        .start {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+        .main-heading {
+            font-weight: 100;
+            
+        }
     </style>
 </head>
 
 
 <body>
-    <div class="mySlides w3-display-container w3-center">
-        <img src="https://www.xda-developers.com/files/2015/10/open-graph-default.png" style="width:100%">
+    <div class="welcome-space w3-display-container w3-center">
+        <img src="https://developer.spotify.com/assets/branding-guidelines/icon4@2x.png" style="width:100%">
         <div class="w3-display-bottommiddle w3-container w3-text-white w3-padding-32 w3-hide-small">
-            <p align=CENTER><b>Welcome to Spotilics</b></p>
+            <h1 class="main-heading">Spotilitics</h1>
+            <p align=CENTER><b>Click below to get started</b></p>
             <a class ="start" href="/login">Login</a>
         </div>
     </div>
@@ -48,6 +71,24 @@
         <i class="fa fa-linkedin w3-hover-opacity"></i>
 
     </footer>
-    <script type="text/javascript" src="scripts/content.js"></script>
+
+    <script>
+        // Automatic Slideshow - change image every 4 seconds
+        var myIndex = 0;
+        carousel();
+
+        function carousel() {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            myIndex++;
+            if (myIndex > x.length) { myIndex = 1 }
+            x[myIndex - 1].style.display = "block";
+
+        }
+    </script>
+
 </body>
 </html>
