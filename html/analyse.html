@@ -12,14 +12,14 @@
 <script type="text/javascript">
         var vizList = [
             "https://public.tableau.com/views/TWB6/Dashboard1?:embed=y&:display_count=yes",
-            "https://public.tableau.com/views/TimeStamps_and_Traits/TStampVSTraits2?:embed=y&:display_count=yes&publish=yes",
-            "https://public.tableau.com/views/TWB2_0/Sheet52?:embed=y&:display_count=yes&publish=yes",
-            "https://public.tableau.com/views/RegionalSampleWorkbook/Stocks"];
+            "https://public.tableau.com/views/TWB2_0/Dashboard1?:embed=y&:display_count=yes",
+            "https://public.tableau.com/views/TWB7/Dashboard2?:embed=y&:display_count=yes",
+            "https://public.tableau.com/views/TWB8/Dashboard1?:embed=y&:display_count=yes"];
 
         var viz,
             vizLen = vizList.length,
             vizCount = 0;
-        var userId = "{{ user.spotify_id}}";
+        var userId = "{{ user.spotify_id }}";
         function createViz(vizPlusMinus) {
             var vizDiv = document.getElementById("vizContainer"),
                 options = {
@@ -101,17 +101,17 @@ footer {
 <header>
   <div class="w3-top">
     <div class="w3-bar w3-black w3-card">
-      <div class="w3-dropdown-hover w3-hide-small">
+      <span class="w3-dropdown-hover w3-hide-small">
         <button class="w3-padding-large w3-button" title="More"><i class="fas fa-bars"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-card-4">
           <a href="#" class="w3-bar-item w3-button">1</a>
           <a href="#" class="w3-bar-item w3-button">2</a>
           <a href="#" class="w3-bar-item w3-button">3</a>
         </div>
-      </div>
-      <span class="header-title">Welcome to spotilitics, {{ user.display_name }}</span>
-    <a href="https://www.spotify.com/au/account/apps/" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-cog"></i></a>
-    <a href="/logout" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-user"></i></a>
+      </span>
+      <span style="text-align: center;">Welcome to spotilitics, {{ user.display_name }}</span>
+      <a href="https://www.spotify.com/au/account/apps/" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-cog"></i></a>
+      <a href="/logout" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-user"></i></a>
     </div>
   </div>
 </header>
@@ -120,29 +120,30 @@ footer {
   <div class="w3-content w3-display-container" width="100%">
     <div class="mySlides">
       <div class="text">
-        <h2> Story 1: Times </h2>
-        <p>You've listened to {{ user.listens_num }} since joining us</p>
-        <p>Below you can see the times that you useualy listens to songs over different days</p>
+        <h2> When do you Listen the most? </h2>
+        <p>Since joining us you've listened to {{ user.listens_num }}</p>
+        <p>Here we can see the times of the day that you listen to the most songs as well as which days of the week </p>
       </div>
     </div>
     <div class="mySlides">
       <div class="text">
-        <h2>Story 2: Qualities</h2>
-        <p>You have a preference for accoustic music, with a varriety of danceability </p>
-        <p>Below is how danceable your songs are compared to other qualities</P>
+        <h2>What you like and when you like it</h2>
+        <p>Songs on spotify have a variety of interesting characteristics the descibe differences and qualities between them</p>
+        <p>In the graph below you can see the trends of a small set of qualities and how your listening history has changed. Try adjusting the time scale to see how the qualities interact</P>
       </div>
     </div>
     <div class="mySlides">
       <div class="text">
-        <h2>Story 3: Emotion</h2>
-        <p>Song on Spotify have a quality called valence, this tells how happy or sad a song might be perceived </p>
-        <p>Below shows the varrying levels of happyness and sadness in some genres you listen to</p>
+        <h2>Musical EQ</h2>
+        <p>Song on Spotify have a quality called valence, this tells how happy or sad a song might be perceived, a score of 1 indicates a very postive song.</p>
+        <p>Below shows the varrying levels of happyness and sadness in comparrison to qualities of the songs themselves</p>
       </div>
     </div>
     <div class="mySlides">
       <div class="text">
-        <h2>Story 4: Stream</h2>
-        <p>The song you listen to are quite often very popular with many spotify listeners, you highest popularity listne was "Some Song" with "some value" and your lowest was....</p>
+        <h2>Mainstream Music</h2>
+        <p>Songs on Spotify have a popularity measure that tells us how many other people are listening to that song.</p>
+        <p>Below you can see how your listens score agaisnt the popularity of other songs, a score of 100 means it is the most popular.</p>
 
       </div>
     </div>

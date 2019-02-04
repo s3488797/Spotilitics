@@ -78,8 +78,7 @@ class Main(Session_handler):
         user_model = models.construct_user_from_db(self.session.get('active_user'))
         template_values = {
             'message': "Got these features for " + display_name,
-            'user': user_model,
-            'content': features
+            'user': user_model
         }
         render_template(self, template_values, MAIN_DISPLAY)
 
@@ -113,7 +112,7 @@ class CallBack(Session_handler):
             user_data_to_add = database.construct_user_dict(user_info, refresh_token)
             if (database.add_user(user_data_to_add) == False): self.redirect('/error')
         # now record the first data for the user
-        tasks.update_user(database.get_user(user_info['id']))
+        #tasks.update_user(database.get_user(user_info['id']))
         # now go to the main page
         self.redirect('/main')
 
