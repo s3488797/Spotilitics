@@ -19,14 +19,13 @@
         var viz,
             vizLen = vizList.length,
             vizCount = 0;
-        var userId = "{{ user.spotify_id }}";
+        var userId = '{{ user.spotify_id }}';
         function createViz(vizPlusMinus) {
             var vizDiv = document.getElementById("vizContainer"),
                 options = {
                     hideTabs: true,
                     hideToolbar: true,
                     'User Id': userId
-                    showShareOptions: false
                 };
 
             vizCount = vizCount + vizPlusMinus;

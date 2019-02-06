@@ -24,13 +24,15 @@ class Listen_model(ndb.Model):
 class User_model(ndb.Model):
     #Model for storing a users data
     display_name = ndb.StringProperty()
+    spotify_id = ndb.StringProperty()
     joined = ndb.DateTimeProperty()
     listens_num = ndb.IntegerProperty()
     listens_list = ndb.StructuredProperty(Listen_model, repeated=True)
 
-def construct_user(display_name, listens, features):
+def construct_user(display_name, id, listens, features):
     user_model = User_model()
     user_model.display_name = display_name
+    user_model.spotify_id = id
     user_model.joined = dt.now()
     user_model.listens_num = 50
     listen_data = []
@@ -63,6 +65,7 @@ def construct_user_from_db(spotify_id):
     user_db = db.get_user(spotify_id)
     user_model = User_model()
     user_model.display_name = user_db.display_name
+    user_model.spotify_id = spotify_id
     user_model.joined = user_db.joined
     user_model.listens_num = user_db.listens
     listen_data = []

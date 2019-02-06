@@ -108,9 +108,9 @@ class CallBack(Session_handler):
         user_data_to_add = database.construct_user_dict(user_info, refresh_token)
         #check if the user is already in the db
         database.init_database_connection()
-        if (database.user_exists(user_info['id']) == True):
-            database.update_user_refresh(refresh_token, user_info['id'])
-        elif (database.user_exists(user_info['id']) == False):
+        #if (database.user_exists(user_info['id']) == True):
+            #database.update_user_refresh(refresh_token, user_info['id'])
+        if (database.user_exists(user_info['id']) == False):
             #create dict of user data
             if (database.add_user(user_data_to_add) == False):
                 self.redirect('/error')
