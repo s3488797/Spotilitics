@@ -105,12 +105,16 @@ class CallBack(Session_handler):
         self.session['active_user'] = user_info['id']
         self.session['access_token'] = access_token
         self.session['refresh_token'] = refresh_token
+        user_data_to_add = database.construct_user_dict(user_info, refresh_token)
         #check if the user is already in the db
         database.init_database_connection()
-        if (database.user_exists(user_info['id']) == False):
+        if (database.user_exists(user_info['id']) == True):
+            database.update_user_refresh(refresh_token, user_info['id'])
+        elif (database.user_exists(user_info['id']) == False):
             #create dict of user data
-            user_data_to_add = database.construct_user_dict(user_info, refresh_token)
-            if (database.add_user(user_data_to_add) == False): self.redirect('/error')
+            if (database.add_user(user_data_to_add) == False):
+                self.redirect('/error')
+                return
         # now record the first data for the user
         #tasks.update_user(database.get_user(user_info['id']))
         # now go to the main page

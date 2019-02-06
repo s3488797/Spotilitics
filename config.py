@@ -14,10 +14,10 @@ LOCAL_SQLALCHEMY_DATABASE_URI = (LOCAL_URI_STRING).format(
         user=CLOUDSQL_USER, password=CLOUDSQL_PASSWORD,
         database=CLOUDSQL_DATABASE)
 
-if (os.environ.get('APPLICATION_ID') == 'f~s3488797-cc2019'):
+if (os.environ.get('APPLICATION_ID') == 'f~' + PROJECT_ID):
     LIVE_CONNECTION_ADDRESS = 'localhost'
 else:
-    LIVE_CONNECTION_ADDRESS = 'https://s3488797-cc2019.appspot.com/'
+    LIVE_CONNECTION_ADDRESS = 'https://' + PROJECT_ID + '.appspot.com/'
 
 # When running on App Engine a unix socket is used to connect to the cloudsql
 # instance.

@@ -101,6 +101,7 @@ def get_user_test(spotify_id):
         result =  db.session.execute(db.session.query(query.exists()))
         return result.first()
 
+# Method to update new user listens infomation
 def update_user_listens(new_listens, spotify_id):
     with app.app_context():
         user = db.session.query(User).filter(User.spotify_id == spotify_id).first()
@@ -108,7 +109,14 @@ def update_user_listens(new_listens, spotify_id):
         user.last_check = dt.now()
         db.session.commit()
 
-#Models
+def update_user_refresh(refresh_token, spotify_id):
+    with app.app_context():
+        user = db.session.query(User).filter(User.spotify_id == spotify_id).first()
+        user.refresh_token += refresh_token
+        user.last_check = dt.now()
+        db.session.commit()
+
+# User model class
 class User(db.Model):
     __tablename__ = 'users'
     spotify_id = db.Column('spotify_id', db.String(255), primary_key=True, unique=True)

@@ -9,8 +9,9 @@ import webapp2
 
 CLIENT_ID = "4f2c1f999a4c480f9d9eea2f82b53723"
 CLIENT_SECRET = "ba1c5975884d4ba080e84b8540b1bc6a"
+PROJECT_ID = 's3488797-cc2019'
 client_details = base64.b64encode(CLIENT_ID + ":" + CLIENT_SECRET)
-REDIRECT_URI = "https://s3488797-cc2019.appspot.com/callback"
+REDIRECT_URI = "https://" + PROJECT_ID + ".appspot.com/callback"
 SCOPES = "user-read-private user-read-recently-played user-read-currently-playing"
 
 def login_address():
@@ -25,10 +26,12 @@ def login_address():
     target = endpoint + "?" + urllib.urlencode(payload)
     return target
 
+# Generic method to make a HTML request
 def make_request(endpoint, method, headers, payload=None):
-    #Function to make fetch requests
     if (method == urlfetch.GET and payload != None):
         endpoint = endpoint + "?" + urllib.urlencode(payload)
+    if (payload != None) :
+        payload = urllib.urlencode(payload)
     fetch_results = urlfetch.fetch(
         url=endpoint,
         payload=payload,
@@ -45,9 +48,10 @@ def make_request(endpoint, method, headers, payload=None):
         return False
     return results
 
+# Initial request for access of a user
 def request_user_access(auth_code):
-    # Initial request for access of a user
     endpoint = 'https://accounts.spotify.com/api/token'
+    method = urlfetch.POST
     payload = {
         'grant_type': "authorization_code",
         'code': auth_code,
@@ -56,12 +60,7 @@ def request_user_access(auth_code):
     headers = {
         'Authorization': 'Basic ' + client_details
     }
-    return make_request(
-        endpoint,
-        urlfetch.POST,
-        headers,
-        urllib.urlencode(payload)
-    )
+    return make_request(endpoint, method, headers, payload)
 
 def refresh_user_access(refresh_token):
     #"""Request for an access token using a refresh token"""
