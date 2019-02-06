@@ -3,6 +3,8 @@ entrypoint: gunicorn -b :$PORT main:app
 api_version: 1
 threadsafe: distributed
 handlers:
+- url: /fetch_listens
+  script: tasks.app
 - url: /.*
   script: app.app
 

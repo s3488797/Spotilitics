@@ -1,0 +1,5 @@
+cron:
+- description: "Request to update listens for users"
+  url: /fetch_listens
+  target: beta
+  schedule: every 30 mins

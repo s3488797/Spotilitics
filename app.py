@@ -4,9 +4,12 @@ import httplib, base64, json, logging
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 
+from datetime import timedelta as td
+from datetime import datetime as dt
 import database
 import connect
 import models
+import tasks
 import jinja2
 import webapp2
 from webapp2_extras import sessions
@@ -70,51 +73,50 @@ class Main(Session_handler):
             logging.info("Detected noone was logged in")
             self.redirect('/welcome')
             return
-        access_token = self.session.get('access_token')
-        refresh_token = self.session.get('refresh_token')
-        #now lets get some listen data and send it to the html
-        listens = connect.get_listens(access_token)
-        if (listens == False): self.redirect('/error')
-        # First construct a list of ids to get details for
-        id_string_list = ""
-        for track in listens['items']:
-            id_string_list += track['track']['id'] + ","
-        id_string_list = id_string_list[:-1]
-        #now get the details of this list
-        features = connect.get_multi_track_features(id_string_list)
-        if (features == False): self.redirect('/error')
+        database.init_database_connection()
         #ok now construct our user model
-        user_model = models.construct_user(display_name, listens, features)
+        user_model = models.construct_user_from_db(self.session.get('active_user'))
         template_values = {
             'message': "Got these features for " + display_name,
-            'user': user_model,
-            'content': features
+            'user': user_model
         }
         render_template(self, template_values, MAIN_DISPLAY)
 
 class CallBack(Session_handler):
     def get(self):
-        if (self.request.get(argument_name='error') == 'access_denied'): self.redirect('/decline')
+        if (self.request.get(argument_name='error') == 'access_denied'):
+            self.redirect('/decline')
+            return
         #the user has authorised access
         auth_token = self.request.get(argument_name='code')
         access_request = connect.request_user_access(auth_token)
-        if (access_request == False): self.redirect('/error')
+        if (access_request == False):
+            self.redirect('/error')
+            return
         #now get info about the current user
         access_token = access_request['access_token']
         refresh_token = access_request['refresh_token']
         user_info = connect.get_user_data(access_token)
-        if (user_info == False): self.redirect('/error')
+        if (user_info == False):
+            self.redirect('/error')
+            return
+        #now we need to write a cookie so that the server isnt always requesting to spotify
         # write info to the session so it can be picked up easy later
-        self.session['active_user'] = user_info['display_name']
+        self.session['active_user'] = user_info['id']
         self.session['access_token'] = access_token
         self.session['refresh_token'] = refresh_token
+        user_data_to_add = database.construct_user_dict(user_info, refresh_token)
         #check if the user is already in the db
-        database.init_database_connecton()
-        if (database.user_exists(user_info['id']) == False):
+        database.init_database_connection()
+        if (database.user_exists(user_info['id']) == True):
+            database.update_user_refresh(refresh_token, user_info['id'])
+        elif (database.user_exists(user_info['id']) == False):
             #create dict of user data
-            user_data_to_add = database.construct_user_dict(user_info, refresh_token)
-            if (database.add_user(user_data_to_add) == False): self.redirect('/error')
-
+            if (database.add_user(user_data_to_add) == False):
+                self.redirect('/error')
+                return
+        # now record the first data for the user
+        #tasks.update_user(database.get_user(user_info['id']))
         # now go to the main page
         self.redirect('/main')
 
@@ -144,22 +146,21 @@ class Error_occured(webapp2.RequestHandler):
 
 class Init_db(webapp2.RequestHandler):
     def get(self):
-        database.init_database_connecton()
+        database.init_database_connection()
         database.create_tables()
         template_values = {'message': "Attempting to init the database"}
         render_template(self, template_values, DEBUG_DISPLAY)
 
-class Debug(webapp2.RequestHandler):
+class Debug(Session_handler):
     def get(self):
-        v = {
-            'SERVER_NAME': str(os.environ.get('SERVER_NAME')),
-            'HTTP_HOST': str(os.environ.get('HTTP_HOST')),
-            'APPLICATION_ID': str(os.environ.get('APPLICATION_ID'))
-        }
+        database.init_database_connection()
+        #ok now construct our user model
+        user_model = models.construct_user_from_db("ladecaz")
         template_values = {
             'message': "Got these for Environment variables",
-            'content': v
+            'content': user_model
         }
+        database.close_connection()
         render_template(self, template_values, DEBUG_DISPLAY)
 
 app = webapp2.WSGIApplication([

@@ -4,151 +4,194 @@
 <title>Analyse</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.6.3/css/all.css' integrity='sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/' crossorigin='anonymous'>
+<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.6.3/css/all.css' integrity='sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/' crossorigin='anonymous'>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script type="text/javascript" src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
+<script type="text/javascript">
+        var vizList = [
+            "https://public.tableau.com/views/TWB6/Dashboard1?:embed=y&:display_count=yes",
+            "https://public.tableau.com/views/TWB2_0/Dashboard1?:embed=y&:display_count=yes",
+            "https://public.tableau.com/views/TWB7/Dashboard2?:embed=y&:display_count=yes",
+            "https://public.tableau.com/views/TWB8/Dashboard1?:embed=y&:display_count=yes"];
+
+        var viz,
+            vizLen = vizList.length,
+            vizCount = 0;
+        var userId = "{{ user.spotify_id }}";
+        function createViz(vizPlusMinus) {
+            var vizDiv = document.getElementById("vizContainer"),
+                options = {
+                    hideTabs: true,
+                    hideToolbar: true,
+                    'User Id': userId
+                    showShareOptions: false
+                };
+
+            vizCount = vizCount + vizPlusMinus;
+
+            if (vizCount >= vizLen) {
+            // Keep the vizCount in the bounds of the array index.
+                vizCount = 0;
+            } else if (vizCount < 0) {
+                vizCount = vizLen - 1;
+            }
+
+            if (viz) { // If a viz object exists, delete it.
+                viz.dispose();
+            }
+
+            var vizURL = vizList[vizCount];
+            viz = new tableau.Viz(vizDiv, vizURL, options);
+        }
+    </script>
 <style>
-    body {
-        font-family: "Lato", sans-serif;
-    }
-
-    .mySlides {
-        display: none;
-    }
+:root {
+  --spotify-green: #1db954;
+  --spotify-main: #212121;
+  --spotify-black: 	#121212;
+  --spotify-grey: #181818;
+  --spotify-player: #535353;
+  --spotify-lightgrey: #b3b3b3;
+}
+body {
+    font-family: "Lato", sans-serif;
+    background-color: var(--spotify-main);
+    color: white;
+}
+.header {
+    background-color: var(--spotify-black);
+}
+footer {
+    background-color: var(--spotify-darkgrey);
+}
+.header-title {
+    text-align:center;
+    display:block;
+    margin: 0 auto;
+}
+.mySlides {
+    display: none;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    align-content: center;
+}
+.w3-display-container {
+  background-image: linear-gradient(var(--spotify-player), var(--spotify-grey));
+}
+.landing {
+  height: 100%;
+  width: 80%;
+}
+#myDIV {
+    width: 100%;
+    padding: 50px 0;
+    text-align: center;
+    background-color: white;
+    color: black;
+    margin-top: 20px;
+    bottom: auto;
+    border: 2px solid #e7e7e7;
+}
 </style>
-
 </head>
 
 <header>
-
-    <!-- Navbar -->
-    <div class="w3-top">
-        <div class="w3-bar w3-black w3-card">
-            <div class="w3-dropdown-hover w3-hide-small">
-                <button class="w3-padding-large w3-button" title="More"><i class="fas fa-bars"></i></button>
-                <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                    <a href="#" class="w3-bar-item w3-button">1</a>
-                    <a href="#" class="w3-bar-item w3-button">2</a>
-                    <a href="#" class="w3-bar-item w3-button">3</a>
-                </div>
-            </div>
-            <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-cog"></i></a>
-            <a href="javascript:void(0)" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-user"></i></a>
+  <div class="w3-top">
+    <div class="w3-bar w3-black w3-card">
+      <span class="w3-dropdown-hover w3-hide-small">
+        <button class="w3-padding-large w3-button" title="More"><i class="fas fa-bars"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+          <a href="#" class="w3-bar-item w3-button">1</a>
+          <a href="#" class="w3-bar-item w3-button">2</a>
+          <a href="#" class="w3-bar-item w3-button">3</a>
         </div>
+      </span>
+      <span style="text-align: center;">Welcome to spotilitics, {{ user.display_name }}</span>
+      <a href="https://www.spotify.com/au/account/apps/" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-cog"></i></a>
+      <a href="/logout" class="w3-padding-large w3-hover-red w3-hide-small w3-right"><i class="fas fa-user"></i></a>
     </div>
+  </div>
 </header>
+<body onload="createViz(0);">
+</br></br>
+  <div class="w3-content w3-display-container" width="100%">
+    <div class="mySlides">
+      <div class="text">
+        <h2> When do you Listen the most? </h2>
+        <p>Since joining us you've listened to {{ user.listens_num }}</p>
+        <p>Here we can see the times of the day that you listen to the most songs as well as which days of the week </p>
+      </div>
+    </div>
+    <div class="mySlides">
+      <div class="text">
+        <h2>What you like and when you like it</h2>
+        <p>Songs on spotify have a variety of interesting characteristics the descibe differences and qualities between them</p>
+        <p>In the graph below you can see the trends of a small set of qualities and how your listening history has changed. Try adjusting the time scale to see how the qualities interact</P>
+      </div>
+    </div>
+    <div class="mySlides">
+      <div class="text">
+        <h2>Musical EQ</h2>
+        <p>Song on Spotify have a quality called valence, this tells how happy or sad a song might be perceived, a score of 1 indicates a very postive song.</p>
+        <p>Below shows the varrying levels of happyness and sadness in comparrison to qualities of the songs themselves</p>
+      </div>
+    </div>
+    <div class="mySlides">
+      <div class="text">
+        <h2>Mainstream Music</h2>
+        <p>Songs on Spotify have a popularity measure that tells us how many other people are listening to that song.</p>
+        <p>Below you can see how your listens score agaisnt the popularity of other songs, a score of 100 means it is the most popular.</p>
 
-<body>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <style>
-        .mySlides {
-            display: none;
-        }
-        #myDIV {
-            width: 100%;
-            padding: 50px 0;
-            text-align: center;
-            background-color: white;
-            color: black;
-            margin-top: 20px;
-            bottom: auto;
-            border: 2px solid #e7e7e7;
-        }
-    </style>
+      </div>
+    </div>
+    <button class="w3-button w3-black w3-display-left" onclick="javascript:nextPage(-1);">&#10094;</button>
+    <button class="w3-button w3-black w3-display-right" onclick="javascript:nextPage(1);">&#10095;</button>
+    <div id="vizContainer" style="width:800px; height:700px; margin: 0 auto"></div>
+  </div>
 
-    <br>
-    <br>
+  <footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge" hight="10%" align="bottommiddle">
+    <i class="fa fa-facebook-official w3-hover-opacity"></i>
+    <i class="fa fa-instagram w3-hover-opacity"></i>
+    <i class="fa fa-snapchat w3-hover-opacity"></i>
+    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+    <i class="fa fa-twitter w3-hover-opacity"></i>
+    <i class="fa fa-linkedin w3-hover-opacity"></i>
+  </footer>
+  <script type="text/javascript">
+  // Varraible and Function for the slideshow
+  var slideIndex = 1;
+  showDivs(slideIndex);
+  function plusDivs(n) {
+      showDivs(slideIndex += n);
+  }
 
+  function showDivs(n) {
+      var i;
+      var x = document.getElementsByClassName("mySlides");
+      if (n > x.length) { slideIndex = 1 }
+      if (n < 1) { slideIndex = x.length }
+      for (i = 0; i < x.length; i++) {
+          x[i].style.display = "none";
+      }
+      x[slideIndex - 1].style.display = "block";
+  }
+  function myFunction() {
+      var x = document.getElementById("myDIV");
+      if (x.style.display === "none") {
+          x.style.display = "block";
+      } else {
+          x.style.display = "none";
+      }
+  }
 
+  function nextPage(n) {
+    plusDivs(n);
+    createViz(n);
+  }
 
-        <p align=center><strong> Welcome! {{ user.display_name }} This is your musical analyse</strong></p>
-
-
-        <div class="w3-content w3-display-container">
-
-            <div class="mySlides">
-                <img src="https://www.coindesk.com/wp-content/uploads/2017/04/analysis-charts-e1493382374824.jpg" style="width:100%" />
-
-                <div class="text">
-                    <p>You spent xxx time in last week for xxx kinda music, xx songs last week </p>
-                </div>
-                <button onclick="myFunction()">More</button>
-                <div id="myDIV">
-                    Base on the data we gather from spotify.Your listen habbit is like this
-                </div>
-            </div>
-
-            <div class="mySlides">
-                <img src="https://cdn4.vectorstock.com/i/1000x1000/59/33/business-analyst-financial-data-analysis-web-icon-vector-14155933.jpg" style="width:100%" />
-
-                <div class="text">
-                    <p>You listened to some songs </p>
-                </div>
-
-            </div>
-
-          <div class="mySlides">
-                <img src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/d6/40caf0acd911e6b47ba308e7536121/Analysis_block.jpg?auto=format%2Ccompress&dpr=2.625" style="width:100%" />
-
-                <div class="text">
-                    <p>maybe this song is the one for you </p>
-                </div>
-
-            </div>
-
-  <div class="mySlides">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRknsvr7E2eJgM3Ys_QUuyT12YqPZc671m_zdytPQ3c6Ee-jH8aSA" style="width:100%" />
-
-                <div class="text">
-                    <p>hey babe </p>
-                </div>
-
-            </div>
-
-            <!--<img class="mySlides" src="https://cdn4.vectorstock.com/i/1000x1000/59/33/business-analyst-financial-data-analysis-web-icon-vector-14155933.jpg" style="width:100%">
-            <img class="mySlides" src="https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/d6/40caf0acd911e6b47ba308e7536121/Analysis_block.jpg?auto=format%2Ccompress&dpr=2.625" style="width:100%">
-            <img class="mySlides" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRknsvr7E2eJgM3Ys_QUuyT12YqPZc671m_zdytPQ3c6Ee-jH8aSA" style="width:100%">-->
-
-            <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
-            <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
-        </div>
-    <!-- Footer -->
-    <footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge">
-        <i class="fa fa-facebook-official w3-hover-opacity"></i>
-        <i class="fa fa-instagram w3-hover-opacity"></i>
-        <i class="fa fa-snapchat w3-hover-opacity"></i>
-        <i class="fa fa-pinterest-p w3-hover-opacity"></i>
-        <i class="fa fa-twitter w3-hover-opacity"></i>
-        <i class="fa fa-linkedin w3-hover-opacity"></i>
-
-    </footer>
-        <script>
-            var slideIndex = 1;
-            showDivs(slideIndex);
-
-            function plusDivs(n) {
-                showDivs(slideIndex += n);
-            }
-
-            function showDivs(n) {
-                var i;
-                var x = document.getElementsByClassName("mySlides");
-                if (n > x.length) { slideIndex = 1 }
-                if (n < 1) { slideIndex = x.length }
-                for (i = 0; i < x.length; i++) {
-                    x[i].style.display = "none";
-                }
-                x[slideIndex - 1].style.display = "block";
-            }
-            function myFunction() {
-                var x = document.getElementById("myDIV");
-                if (x.style.display === "none") {
-                    x.style.display = "block";
-                } else {
-                    x.style.display = "none";
-                }
-            }
-        </script>
-    </body>
+  </script>
+</body>
 </html>

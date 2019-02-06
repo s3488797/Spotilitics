@@ -1,0 +1,62 @@
+:root {
+	--spotify-green: #1db954;
+	--spotify-main: #212121;
+	--spotify-black: 	#121212;
+	--spotify-grey: #181818;
+	--spotify-player: #535353;
+	--spotify-lightgrey: #b3b3b3;
+}
+
+body {
+		font-family: "Lato", sans-serif;
+		background-color: var(--spotify-main);
+		color: white;
+}
+
+.header {
+		background-color: var(--spotify-black);
+}
+
+footer {
+		background-color: var(--spotify-darkgrey);
+}
+
+.mySlides {
+		display: none;
+		height: 100%;
+		width: 100%;
+		align-content: center;
+		background-image: linear-gradient(var(--spotify-player), var(--spotify-grey));
+}
+
+.landing {
+	height: 100%;
+	width: 80%;
+}
+
+#myDIV {
+		width: 100%;
+		padding: 50px 0;
+		text-align: center;
+		background-color: white;
+		color: black;
+		margin-top: 20px;
+		bottom: auto;
+		border: 2px solid #e7e7e7;
+}
+
+.start {
+		background-color: #4CAF50; /* Green */
+		border: none;
+		color: white;
+		padding: 15px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		margin: 4px 2px;
+		cursor: pointer;
+		-webkit-transition-duration: 0.4s; /* Safari */
+		transition-duration: 0.4s;
+		box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
